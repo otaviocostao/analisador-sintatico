@@ -1,0 +1,237 @@
+{
+  "type": "Program",
+  "body": [
+{
+      "type": "ProcedureDeclaration",
+      "name": "imprimirContagem",
+      "params": [
+      ],
+      "body": {
+        "type": "Block",
+        "statements": [
+{
+            "type": "VariableDeclaration",
+            "varType": "int",
+            "name": "i",
+            "value": {
+              "type": "Literal",
+              "valueType": "int_literal",
+              "value": "0"
+            }
+          },
+{
+            "type": "WhileStatement",
+            "condition": {
+              "type": "BinaryExpression",
+              "operator": "less",
+              "left": {
+                "type": "Identifier",
+                "name": "i"
+              },
+              "right": {
+                "type": "Literal",
+                "valueType": "int_literal",
+                "value": "10"
+              }
+            },
+            "body": {
+              "type": "Block",
+              "statements": [
+{
+                  "type": "Assignment",
+                  "name": "i",
+                  "value": {
+                    "type": "BinaryExpression",
+                    "operator": "plus",
+                    "left": {
+                      "type": "Identifier",
+                      "name": "i"
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "valueType": "int_literal",
+                      "value": "1"
+                    }
+                  }
+                },
+{
+                  "type": "IfStatement",
+                  "condition": {
+                    "type": "BinaryExpression",
+                    "operator": "equal_equal",
+                    "left": {
+                      "type": "Identifier",
+                      "name": "i"
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "valueType": "int_literal",
+                      "value": "5"
+                    }
+                  },
+                  "thenBranch": {
+                    "type": "Block",
+                    "statements": [
+{
+                        "type": "ContinueStatement"
+                      }
+                    ]
+                  },
+                  "elseBranch": null
+                },
+{
+                  "type": "IfStatement",
+                  "condition": {
+                    "type": "BinaryExpression",
+                    "operator": "equal_equal",
+                    "left": {
+                      "type": "Identifier",
+                      "name": "i"
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "valueType": "int_literal",
+                      "value": "9"
+                    }
+                  },
+                  "thenBranch": {
+                    "type": "Block",
+                    "statements": [
+{
+                        "type": "BreakStatement"
+                      }
+                    ]
+                  },
+                  "elseBranch": null
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+{
+      "type": "FunctionDeclaration",
+      "returnType": "void",
+      "name": "calcularArea",
+      "params": [
+{
+          "type": "Parameter",
+          "paramType": "int",
+          "name": "base"
+        },
+{
+          "type": "Parameter",
+          "paramType": "int",
+          "name": "altura"
+        }
+      ],
+      "body": {
+        "type": "Block",
+        "statements": [
+{
+            "type": "VariableDeclaration",
+            "varType": "int",
+            "name": "area",
+            "value": {
+              "type": "BinaryExpression",
+              "operator": "divide",
+              "left": {
+                "type": "BinaryExpression",
+                "operator": "multiply",
+                "left": {
+                  "type": "Identifier",
+                  "name": "base"
+                },
+                "right": {
+                  "type": "Identifier",
+                  "name": "altura"
+                }
+              },
+              "right": {
+                "type": "Literal",
+                "valueType": "int_literal",
+                "value": "2"
+              }
+            }
+          },
+{
+            "type": "ReturnStatement",
+            "argument": {
+              "type": "Identifier",
+              "name": "area"
+            }
+          }
+        ]
+      }
+    },
+{
+      "type": "ForStatement",
+      "init": {
+        "type": "VariableDeclaration",
+        "varType": "int",
+        "name": "j",
+        "value": {
+          "type": "Literal",
+          "valueType": "int_literal",
+          "value": "0"
+        }
+      },
+      "condition": {
+        "type": "BinaryExpression",
+        "operator": "less",
+        "left": {
+          "type": "Identifier",
+          "name": "j"
+        },
+        "right": {
+          "type": "Literal",
+          "valueType": "int_literal",
+          "value": "5"
+        }
+      },
+      "increment": {
+        "type": "Assignment",
+        "name": "j",
+        "value": {
+          "type": "BinaryExpression",
+          "operator": "plus",
+          "left": {
+            "type": "Identifier",
+            "name": "j"
+          },
+          "right": {
+            "type": "Literal",
+            "valueType": "int_literal",
+            "value": "1"
+          }
+        }
+      },
+      "body": {
+        "type": "Block",
+        "statements": [
+{
+            "type": "VariableDeclaration",
+            "varType": "int",
+            "name": "valor",
+            "value": {
+              "type": "FunctionCall",
+              "name": "calcularArea",
+              "arguments": [
+{
+                  "type": "Identifier",
+                  "name": "j"
+                },
+{
+                  "type": "Literal",
+                  "valueType": "int_literal",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

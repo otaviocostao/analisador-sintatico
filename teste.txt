@@ -1,0 +1,13 @@
+int x = 10;
+int y = 20;
+float pi = 3.14;
+string saudacao = "Ola UNIFAN";
+
+int soma = x + y;
+int sub = x - 5;
+int multi = x * 2;
+int div = y / 2;
+int resto = x % 3;
+
+int logica = (x > 5) && (y < 50);
+int negacao = ! (x == 0);

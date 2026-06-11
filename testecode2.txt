@@ -1,0 +1,21 @@
+proc imprimirContagem() {
+    int i = 0;
+    while (i < 10) {
+        i = i + 1;
+        if (i == 5) {
+            continue; // Pula o 5
+        }
+        if (i == 9) {
+            break; // Para no 9
+        }
+    }
+}
+
+func calcularArea(int base, int altura) {
+    int area = (base * altura) / 2;
+    return area;
+}
+
+for (int j = 0; j < 5; j = j + 1) {
+    int valor = calcularArea(j, 10);
+}

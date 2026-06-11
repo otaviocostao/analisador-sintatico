@@ -1,0 +1,191 @@
+{
+  "type": "Program",
+  "body": [
+{
+      "type": "VariableDeclaration",
+      "varType": "int",
+      "name": "x",
+      "value": {
+        "type": "Literal",
+        "valueType": "int_literal",
+        "value": "10"
+      }
+    },
+{
+      "type": "VariableDeclaration",
+      "varType": "int",
+      "name": "y",
+      "value": {
+        "type": "Literal",
+        "valueType": "int_literal",
+        "value": "20"
+      }
+    },
+{
+      "type": "VariableDeclaration",
+      "varType": "float",
+      "name": "pi",
+      "value": {
+        "type": "Literal",
+        "valueType": "float_literal",
+        "value": "3.14"
+      }
+    },
+{
+      "type": "VariableDeclaration",
+      "varType": "string",
+      "name": "saudacao",
+      "value": {
+        "type": "Literal",
+        "valueType": "string_literal",
+        "value": "\"Ola UNIFAN\""
+      }
+    },
+{
+      "type": "VariableDeclaration",
+      "varType": "int",
+      "name": "soma",
+      "value": {
+        "type": "BinaryExpression",
+        "operator": "plus",
+        "left": {
+          "type": "Identifier",
+          "name": "x"
+        },
+        "right": {
+          "type": "Identifier",
+          "name": "y"
+        }
+      }
+    },
+{
+      "type": "VariableDeclaration",
+      "varType": "int",
+      "name": "sub",
+      "value": {
+        "type": "BinaryExpression",
+        "operator": "minus",
+        "left": {
+          "type": "Identifier",
+          "name": "x"
+        },
+        "right": {
+          "type": "Literal",
+          "valueType": "int_literal",
+          "value": "5"
+        }
+      }
+    },
+{
+      "type": "VariableDeclaration",
+      "varType": "int",
+      "name": "multi",
+      "value": {
+        "type": "BinaryExpression",
+        "operator": "multiply",
+        "left": {
+          "type": "Identifier",
+          "name": "x"
+        },
+        "right": {
+          "type": "Literal",
+          "valueType": "int_literal",
+          "value": "2"
+        }
+      }
+    },
+{
+      "type": "VariableDeclaration",
+      "varType": "int",
+      "name": "div",
+      "value": {
+        "type": "BinaryExpression",
+        "operator": "divide",
+        "left": {
+          "type": "Identifier",
+          "name": "y"
+        },
+        "right": {
+          "type": "Literal",
+          "valueType": "int_literal",
+          "value": "2"
+        }
+      }
+    },
+{
+      "type": "VariableDeclaration",
+      "varType": "int",
+      "name": "resto",
+      "value": {
+        "type": "BinaryExpression",
+        "operator": "modulo",
+        "left": {
+          "type": "Identifier",
+          "name": "x"
+        },
+        "right": {
+          "type": "Literal",
+          "valueType": "int_literal",
+          "value": "3"
+        }
+      }
+    },
+{
+      "type": "VariableDeclaration",
+      "varType": "int",
+      "name": "logica",
+      "value": {
+        "type": "BinaryExpression",
+        "operator": "and",
+        "left": {
+          "type": "BinaryExpression",
+          "operator": "greater",
+          "left": {
+            "type": "Identifier",
+            "name": "x"
+          },
+          "right": {
+            "type": "Literal",
+            "valueType": "int_literal",
+            "value": "5"
+          }
+        },
+        "right": {
+          "type": "BinaryExpression",
+          "operator": "less",
+          "left": {
+            "type": "Identifier",
+            "name": "y"
+          },
+          "right": {
+            "type": "Literal",
+            "valueType": "int_literal",
+            "value": "50"
+          }
+        }
+      }
+    },
+{
+      "type": "VariableDeclaration",
+      "varType": "int",
+      "name": "negacao",
+      "value": {
+        "type": "UnaryExpression",
+        "operator": "not",
+        "argument": {
+          "type": "BinaryExpression",
+          "operator": "equal_equal",
+          "left": {
+            "type": "Identifier",
+            "name": "x"
+          },
+          "right": {
+            "type": "Literal",
+            "valueType": "int_literal",
+            "value": "0"
+          }
+        }
+      }
+    }
+  ]
+}

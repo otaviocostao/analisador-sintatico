@@ -1,0 +1,33 @@
+{
+  "type": "Program",
+  "body": [
+{
+      "type": "VariableDeclaration",
+      "varType": "int",
+      "name": "x",
+      "value": {
+        "type": "BinaryExpression",
+        "operator": "plus",
+        "left": {
+          "type": "Literal",
+          "valueType": "int_literal",
+          "value": "1"
+        },
+        "right": {
+          "type": "BinaryExpression",
+          "operator": "multiply",
+          "left": {
+            "type": "Literal",
+            "valueType": "int_literal",
+            "value": "1"
+          },
+          "right": {
+            "type": "Literal",
+            "valueType": "int_literal",
+            "value": "5"
+          }
+        }
+      }
+    }
+  ]
+}
