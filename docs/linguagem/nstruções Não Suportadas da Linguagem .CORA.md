@@ -6,12 +6,6 @@
 
 ---
 
-## Resumo
-
-Este documento cataloga as construções **rejeitadas** pelo analisador sintático da linguagem .CORA, organizadas por categoria gramatical. A catalogação fundamenta-se na especificação oficial, na gramática LL(1) implementada e na bateria de **60 casos de teste** documentados em [relatorio_60_casos.md](../erros_estruturais/relatorio_60_casos.md), todos validados com mensagens de erro contextualizadas.
-
----
-
 ## 1. Introdução: natureza das restrições
 
 As limitações aqui descritas possuem duas origens complementares:
