@@ -1,9 +1,9 @@
 import java.util.*;
 
 public class Parser {
-    // -------------------------------------------------------------
-    // Estruturas de Árvore Sintática Concreta (CST)
-    // -------------------------------------------------------------
+
+
+
     public static class CSTNode {
         public final String name;
         public String lexeme;
@@ -34,14 +34,14 @@ public class Parser {
         }
     }
 
-    // -------------------------------------------------------------
-    // Não-terminais da gramática
-    // -------------------------------------------------------------
+
+
+
     private static final Set<String> NAO_TERMINAIS = Set.of(
-        "P", "LG", "EL", "DECL", "DECL_REST", "TIPO", "FUNC_DEF", "FUNC_REST", "PROC_DEF", "PARAMS", "PARAMS_L", "PARAM", 
-        "BLOCO", "LISTA_COM", "COM", "IF_S", "ELSE_OPC", "WHILE_S", "FOR_S", "FOR_INIT", "DECL_REST_FOR", "ATRIB_S", "EXP_OPC", 
-        "SWITCH_S", "LISTA_CASES", "CASE_I", "DEF_OPC", "EXP", "EXP_L", "E_AND", "E_AND_L", "E_COMP", 
-        "E_COMP_L", "OP_REL", "E_ADD", "E_ADD_L", "E_MULT", "E_MULT_L", "E_UN", "FINAL", "FINAL_L", 
+        "P", "LG", "EL", "DECL", "DECL_REST", "TIPO", "FUNC_DEF", "FUNC_REST", "PROC_DEF", "PARAMS", "PARAMS_L", "PARAM",
+        "BLOCO", "LISTA_COM", "COM", "IF_S", "ELSE_OPC", "WHILE_S", "FOR_S", "FOR_INIT", "DECL_REST_FOR", "ATRIB_S", "EXP_OPC",
+        "SWITCH_S", "LISTA_CASES", "CASE_I", "DEF_OPC", "EXP", "EXP_L", "E_AND", "E_AND_L", "E_COMP",
+        "E_COMP_L", "OP_REL", "E_ADD", "E_ADD_L", "E_MULT", "E_MULT_L", "E_UN", "FINAL", "FINAL_L",
         "ARGS", "ARGS_L", "LITERAL"
     );
 
@@ -49,11 +49,11 @@ public class Parser {
         "EXP_L", "E_AND_L", "E_COMP_L", "E_ADD_L", "E_MULT_L", "FINAL_L", "PARAMS_L", "ARGS_L"
     );
 
-    // -------------------------------------------------------------
-    // Conjuntos Follow para Recuperação de Erros LL(1)
-    // -------------------------------------------------------------
+
+
+
     private static final Map<String, Set<String>> FOLLOW = new HashMap<>();
-    
+
     static {
         FOLLOW.put("P", Set.of("$"));
         FOLLOW.put("LG", Set.of("$"));
@@ -101,28 +101,28 @@ public class Parser {
         FOLLOW.put("LITERAL", Set.of("colon", "multiply", "divide", "modulo", "plus", "minus", "greater", "less", "greater_equal", "less_equal", "equal_equal", "not_equal", "and", "or", "semicolon", "rparen", "comma"));
     }
 
-    // -------------------------------------------------------------
-    // Produções: índice → lista de símbolos (terminais/não-terminais)
-    // -------------------------------------------------------------
+
+
+
     private static final Map<Integer, List<String>> PRODUCOES = new HashMap<>();
     private static final Map<Integer, String> DESCRICAO_PRODUCAO = new HashMap<>();
-    
+
     static {
         PRODUCOES.put(0, List.of("LG", "$"));
         PRODUCOES.put(1, List.of("EL", "LG"));
         PRODUCOES.put(2, List.of());
-        
+
         PRODUCOES.put(3, List.of("COM"));
         PRODUCOES.put(4, List.of("FUNC_DEF"));
         PRODUCOES.put(5, List.of("PROC_DEF"));
-        
+
         PRODUCOES.put(6, List.of("TIPO", "identifier", "DECL_REST"));
         PRODUCOES.put(7, List.of("identifier", "assign", "EXP", "semicolon"));
-        
+
         PRODUCOES.put(8, List.of("int"));
         PRODUCOES.put(9, List.of("float"));
         PRODUCOES.put(10, List.of("string"));
-        
+
         PRODUCOES.put(11, List.of("func", "FUNC_REST"));
         PRODUCOES.put(12, List.of("proc", "identifier", "lparen", "PARAMS", "rparen", "BLOCO"));
         PRODUCOES.put(13, List.of("PARAM", "PARAMS_L"));
@@ -136,10 +136,10 @@ public class Parser {
         PRODUCOES.put(21, List.of("DECL"));
         PRODUCOES.put(22, List.of("IF_S"));
         PRODUCOES.put(23, List.of("WHILE_S"));
-        
-        // FOR_S com suporte a declaração de variável ou atribuição
+
+
         PRODUCOES.put(24, List.of("FOR_S"));
-        
+
         PRODUCOES.put(25, List.of("SWITCH_S"));
         PRODUCOES.put(26, List.of("identifier", "lparen", "ARGS", "rparen", "semicolon"));
         PRODUCOES.put(27, List.of("return", "EXP_OPC", "semicolon"));
@@ -149,20 +149,20 @@ public class Parser {
         PRODUCOES.put(31, List.of("else", "BLOCO"));
         PRODUCOES.put(32, List.of());
         PRODUCOES.put(33, List.of("while", "lparen", "EXP", "rparen", "BLOCO"));
-        
-        // Produção principal do FOR
+
+
         PRODUCOES.put(34, List.of("for", "lparen", "FOR_INIT", "semicolon", "EXP", "semicolon", "ATRIB_S", "rparen", "BLOCO"));
-        
+
         PRODUCOES.put(35, List.of("identifier", "assign", "EXP"));
         PRODUCOES.put(36, List.of("EXP"));
         PRODUCOES.put(37, List.of());
         PRODUCOES.put(38, List.of("switch", "lparen", "identifier", "rparen", "lbrace", "LISTA_CASES", "DEF_OPC", "rbrace"));
         PRODUCOES.put(39, List.of("CASE_I", "LISTA_CASES"));
         PRODUCOES.put(40, List.of());
-        
-        // CASE_I simplificado para não conflitar com break na LISTA_COM
+
+
         PRODUCOES.put(41, List.of("case", "LITERAL", "colon", "LISTA_COM"));
-        
+
         PRODUCOES.put(42, List.of("default", "colon", "LISTA_COM"));
         PRODUCOES.put(43, List.of());
         PRODUCOES.put(44, List.of("E_AND", "EXP_L"));
@@ -204,13 +204,13 @@ public class Parser {
         PRODUCOES.put(80, List.of("int_literal"));
         PRODUCOES.put(81, List.of("float_literal"));
         PRODUCOES.put(82, List.of("string_literal"));
-        
+
         PRODUCOES.put(83, List.of("semicolon"));
         PRODUCOES.put(84, List.of("assign", "EXP", "semicolon"));
         PRODUCOES.put(85, List.of("TIPO", "identifier", "lparen", "PARAMS", "rparen", "BLOCO"));
         PRODUCOES.put(86, List.of("identifier", "lparen", "PARAMS", "rparen", "BLOCO"));
-        
-        // FOR_INIT e DECL_REST_FOR
+
+
         PRODUCOES.put(87, List.of("TIPO", "identifier", "DECL_REST_FOR"));
         PRODUCOES.put(88, List.of("identifier", "assign", "EXP"));
         PRODUCOES.put(89, List.of());
@@ -300,12 +300,12 @@ public class Parser {
         DESCRICAO_PRODUCAO.put(80, "LITERAL -> int_literal");
         DESCRICAO_PRODUCAO.put(81, "LITERAL -> float_literal");
         DESCRICAO_PRODUCAO.put(82, "LITERAL -> string_literal");
-        
+
         DESCRICAO_PRODUCAO.put(83, "DECL_REST -> ;");
         DESCRICAO_PRODUCAO.put(84, "DECL_REST -> = EXP ;");
         DESCRICAO_PRODUCAO.put(85, "FUNC_REST -> TIPO identifier ( PARAMS ) BLOCO");
         DESCRICAO_PRODUCAO.put(86, "FUNC_REST -> identifier ( PARAMS ) BLOCO");
-        
+
         DESCRICAO_PRODUCAO.put(87, "FOR_INIT -> TIPO identifier DECL_REST_FOR");
         DESCRICAO_PRODUCAO.put(88, "FOR_INIT -> identifier = EXP");
         DESCRICAO_PRODUCAO.put(89, "FOR_INIT -> ε");
@@ -313,9 +313,9 @@ public class Parser {
         DESCRICAO_PRODUCAO.put(91, "DECL_REST_FOR -> ε");
     }
 
-    // -------------------------------------------------------------
-    // Tabela LL(1): TABELA[não-terminal][terminal] = índice produção
-    // -------------------------------------------------------------
+
+
+
     private static final Map<String, Map<String, Integer>> TABELA = new HashMap<>();
 
     private static void addTransicao(String naoTerminal, String terminal, int producaoIdx) {
@@ -323,70 +323,70 @@ public class Parser {
     }
 
     static {
-        // P
-        for (String t : List.of("int", "float", "string", "identifier", "func", "proc", "$", "if", "while", "for", "switch", "return", "break", "continue")) {
+
+        for (String t : List.of("int", "float", "string", "identifier", "func", "proc", "$", "if", "while", "for", "switch", "return", "break", "continue", "int_literal", "float_literal", "string_literal", "lparen", "minus", "not")) {
             addTransicao("P", t, 0);
         }
 
-        // LG
-        for (String t : List.of("int", "float", "string", "identifier", "func", "proc", "if", "while", "for", "switch", "return", "break", "continue")) {
+
+        for (String t : List.of("int", "float", "string", "identifier", "func", "proc", "if", "while", "for", "switch", "return", "break", "continue", "int_literal", "float_literal", "string_literal", "lparen", "minus", "not")) {
             addTransicao("LG", t, 1);
         }
         addTransicao("LG", "$", 2);
 
-        // EL
+
         for (String t : List.of("int", "float", "string", "identifier", "if", "while", "for", "switch", "return", "break", "continue")) {
             addTransicao("EL", t, 3);
         }
         addTransicao("EL", "func", 4);
         addTransicao("EL", "proc", 5);
 
-        // DECL
+
         for (String t : List.of("int", "float", "string")) {
             addTransicao("DECL", t, 6);
         }
         addTransicao("DECL", "identifier", 7);
 
-        // DECL_REST
+
         addTransicao("DECL_REST", "semicolon", 83);
         addTransicao("DECL_REST", "assign", 84);
 
-        // TIPO
+
         addTransicao("TIPO", "int", 8);
         addTransicao("TIPO", "float", 9);
         addTransicao("TIPO", "string", 10);
 
-        // FUNC_DEF
+
         addTransicao("FUNC_DEF", "func", 11);
 
-        // FUNC_REST
+
         for (String t : List.of("int", "float", "string")) {
             addTransicao("FUNC_REST", t, 85);
         }
         addTransicao("FUNC_REST", "identifier", 86);
 
-        // PROC_DEF
+
         addTransicao("PROC_DEF", "proc", 12);
 
-        // PARAMS
+
         for (String t : List.of("int", "float", "string")) {
             addTransicao("PARAMS", t, 13);
         }
         addTransicao("PARAMS", "rparen", 14);
 
-        // PARAMS_L
+
         addTransicao("PARAMS_L", "comma", 15);
         addTransicao("PARAMS_L", "rparen", 16);
 
-        // PARAM
+
         for (String t : List.of("int", "float", "string")) {
             addTransicao("PARAM", t, 17);
         }
 
-        // BLOCO
+
         addTransicao("BLOCO", "lbrace", 18);
 
-        // LISTA_COM
+
         for (String t : List.of("int", "float", "string", "identifier", "if", "while", "for", "switch", "return", "break", "continue")) {
             addTransicao("LISTA_COM", t, 19);
         }
@@ -394,7 +394,7 @@ public class Parser {
         addTransicao("LISTA_COM", "case", 20);
         addTransicao("LISTA_COM", "default", 20);
 
-        // COM
+
         for (String t : List.of("int", "float", "string")) {
             addTransicao("COM", t, 21);
         }
@@ -406,85 +406,85 @@ public class Parser {
         addTransicao("COM", "break", 28);
         addTransicao("COM", "continue", 29);
 
-        // IF_S
+
         addTransicao("IF_S", "if", 30);
 
-        // ELSE_OPC
+
         addTransicao("ELSE_OPC", "else", 31);
         for (String t : List.of("int", "float", "string", "identifier", "if", "while", "for", "switch", "return", "break", "continue", "rbrace")) {
             addTransicao("ELSE_OPC", t, 32);
         }
 
-        // WHILE_S
+
         addTransicao("WHILE_S", "while", 33);
 
-        // FOR_S
+
         addTransicao("FOR_S", "for", 34);
 
-        // FOR_INIT
+
         for (String t : List.of("int", "float", "string")) {
             addTransicao("FOR_INIT", t, 87);
         }
         addTransicao("FOR_INIT", "identifier", 88);
         addTransicao("FOR_INIT", "semicolon", 89);
 
-        // DECL_REST_FOR
+
         addTransicao("DECL_REST_FOR", "assign", 90);
         addTransicao("DECL_REST_FOR", "semicolon", 91);
 
-        // ATRIB_S
+
         addTransicao("ATRIB_S", "identifier", 35);
 
-        // EXP_OPC
+
         for (String t : List.of("not", "minus", "lparen", "identifier", "int_literal", "float_literal", "string_literal")) {
             addTransicao("EXP_OPC", t, 36);
         }
         addTransicao("EXP_OPC", "semicolon", 37);
 
-        // SWITCH_S
+
         addTransicao("SWITCH_S", "switch", 38);
 
-        // LISTA_CASES
+
         addTransicao("LISTA_CASES", "case", 39);
         for (String t : List.of("default", "rbrace")) {
             addTransicao("LISTA_CASES", t, 40);
         }
 
-        // CASE_I
+
         addTransicao("CASE_I", "case", 41);
 
-        // DEF_OPC
+
         addTransicao("DEF_OPC", "default", 42);
         addTransicao("DEF_OPC", "rbrace", 43);
 
-        // EXP
+
         for (String t : List.of("not", "minus", "lparen", "identifier", "int_literal", "float_literal", "string_literal")) {
             addTransicao("EXP", t, 44);
         }
 
-        // EXP_L
+
         addTransicao("EXP_L", "or", 45);
         for (String t : List.of("semicolon", "rparen", "comma", "colon")) {
             addTransicao("EXP_L", t, 46);
         }
 
-        // E_AND
+
         for (String t : List.of("not", "minus", "lparen", "identifier", "int_literal", "float_literal", "string_literal")) {
             addTransicao("E_AND", t, 47);
         }
 
-        // E_AND_L
+
         addTransicao("E_AND_L", "and", 48);
         for (String t : List.of("or", "semicolon", "rparen", "comma", "colon")) {
             addTransicao("E_AND_L", t, 49);
         }
 
-        // E_COMP
+
         for (String t : List.of("not", "minus", "lparen", "identifier", "int_literal", "float_literal", "string_literal")) {
             addTransicao("E_COMP", t, 50);
         }
 
-        // E_COMP_L
+
         for (String t : List.of("greater", "less", "greater_equal", "less_equal", "equal_equal", "not_equal")) {
             addTransicao("E_COMP_L", t, 51);
         }
@@ -492,7 +492,7 @@ public class Parser {
             addTransicao("E_COMP_L", t, 52);
         }
 
-        // OP_REL
+
         addTransicao("OP_REL", "greater", 53);
         addTransicao("OP_REL", "less", 54);
         addTransicao("OP_REL", "greater_equal", 55);
@@ -500,24 +500,24 @@ public class Parser {
         addTransicao("OP_REL", "equal_equal", 57);
         addTransicao("OP_REL", "not_equal", 58);
 
-        // E_ADD
+
         for (String t : List.of("not", "minus", "lparen", "identifier", "int_literal", "float_literal", "string_literal")) {
             addTransicao("E_ADD", t, 59);
         }
 
-        // E_ADD_L
+
         addTransicao("E_ADD_L", "plus", 60);
         addTransicao("E_ADD_L", "minus", 61);
         for (String t : List.of("greater", "less", "greater_equal", "less_equal", "equal_equal", "not_equal", "and", "or", "semicolon", "rparen", "comma", "colon")) {
             addTransicao("E_ADD_L", t, 62);
         }
 
-        // E_MULT
+
         for (String t : List.of("not", "minus", "lparen", "identifier", "int_literal", "float_literal", "string_literal")) {
             addTransicao("E_MULT", t, 63);
         }
 
-        // E_MULT_L
+
         addTransicao("E_MULT_L", "multiply", 64);
         addTransicao("E_MULT_L", "divide", 65);
         addTransicao("E_MULT_L", "modulo", 66);
@@ -525,45 +525,45 @@ public class Parser {
             addTransicao("E_MULT_L", t, 67);
         }
 
-        // E_UN
+
         addTransicao("E_UN", "not", 68);
         addTransicao("E_UN", "minus", 69);
         for (String t : List.of("lparen", "identifier", "int_literal", "float_literal", "string_literal")) {
             addTransicao("E_UN", t, 70);
         }
 
-        // FINAL
+
         addTransicao("FINAL", "lparen", 71);
         addTransicao("FINAL", "identifier", 72);
         for (String t : List.of("int_literal", "float_literal", "string_literal")) {
             addTransicao("FINAL", t, 73);
         }
 
-        // FINAL_L
+
         addTransicao("FINAL_L", "lparen", 74);
         for (String t : List.of("multiply", "divide", "modulo", "plus", "minus", "greater", "less", "greater_equal", "less_equal", "equal_equal", "not_equal", "and", "or", "semicolon", "rparen", "comma", "colon")) {
             addTransicao("FINAL_L", t, 75);
         }
 
-        // ARGS
+
         for (String t : List.of("not", "minus", "lparen", "identifier", "int_literal", "float_literal", "string_literal")) {
             addTransicao("ARGS", t, 76);
         }
         addTransicao("ARGS", "rparen", 77);
 
-        // ARGS_L
+
         addTransicao("ARGS_L", "comma", 78);
         addTransicao("ARGS_L", "rparen", 79);
 
-        // LITERAL
+
         addTransicao("LITERAL", "int_literal", 80);
         addTransicao("LITERAL", "float_literal", 81);
         addTransicao("LITERAL", "string_literal", 82);
     }
 
-    // -------------------------------------------------------------
-    // Mapeamento de Token.type para Símbolo da Gramática
-    // -------------------------------------------------------------
+
+
+
     private static String getGrammarSymbol(Token token) {
         if (token == null) return "$";
         switch (token.type) {
@@ -608,6 +608,8 @@ public class Parser {
             case INT_LITERAL: return "int_literal";
             case FLOAT_LITERAL: return "float_literal";
             case STRING_LITERAL: return "string_literal";
+            case LBRACKET: return "lbracket";
+            case RBRACKET: return "rbracket";
             case EOF: return "$";
             default: return "$";
         }
@@ -620,6 +622,8 @@ public class Parser {
             case "rparen": return "parênteses ')'";
             case "lbrace": return "abre chaves '{'";
             case "rbrace": return "fecha chaves '}'";
+            case "lbracket": return "abre colchetes '['";
+            case "rbracket": return "fecha colchetes ']'";
             case "assign": return "operador de atribuição '='";
             case "colon": return "dois pontos ':'";
             case "identifier": return "identificador";
@@ -635,19 +639,547 @@ public class Parser {
             case "E_UN":
             case "FINAL":
                 return "Expressão ou valor esperado";
+            case "BLOCO":
+                return "Abre chaves '{' esperado após a condição";
+            case "LG":
+                return "declaração, definição de função/procedimento ou comando";
+            case "LISTA_COM":
+                return "comando ou fecha chaves '}'";
+            case "FUNC_REST":
+                return "tipo ou nome da função após 'func'";
             default: return "símbolo '" + symbol + "' esperado";
         }
     }
 
-    // -------------------------------------------------------------
-    // Analisador Sintático LL(1) orientado por tabela com CST/AST
-    // -------------------------------------------------------------
+    private static boolean pilhaContains(List<StackItem> pilha, String symbol) {
+        for (StackItem item : pilha) {
+            if (item.symbol.equals(symbol)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean hasDuplicateDefaultBefore(List<Token> tokens, int idx) {
+        for (int i = idx - 1; i >= 0; i--) {
+            Token t = tokens.get(i);
+            if (t.type == TokenType.SWITCH) {
+                return false;
+            }
+            if (t.type == TokenType.DEFAULT) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static int findUnclosedSwitchLine(List<Token> tokens, int idx) {
+        for (int i = idx - 1; i >= 0; i--) {
+            if (tokens.get(i).type == TokenType.SWITCH) {
+                int depth = 0;
+                boolean foundLbrace = false;
+                int lbraceLine = -1;
+                for (int j = i; j < idx; j++) {
+                    if (tokens.get(j).type == TokenType.LBRACE) {
+                        depth++;
+                        foundLbrace = true;
+                        lbraceLine = tokens.get(j).line;
+                    } else if (tokens.get(j).type == TokenType.RBRACE) {
+                        depth--;
+                    }
+                }
+                if (foundLbrace && depth > 0) {
+                    return lbraceLine > 0 ? lbraceLine : tokens.get(i).line;
+                }
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+    private static boolean hasErrorContaining(List<String> erros, String text) {
+        for (String erro : erros) {
+            if (erro.contains(text)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isControlKeyword(String lexeme) {
+        return lexeme.equals("if") || lexeme.equals("while") || lexeme.equals("for") || lexeme.equals("switch");
+    }
+
+    private static boolean isInsideFunctionCallArgs(List<Token> tokens, int idx) {
+        int depth = 0;
+        for (int i = idx - 1; i >= 0; i--) {
+            Token t = tokens.get(i);
+            if (t.type == TokenType.RPAREN) {
+                depth++;
+            } else if (t.type == TokenType.LPAREN) {
+                if (depth > 0) {
+                    depth--;
+                } else {
+                    if (i > 0 && tokens.get(i - 1).type == TokenType.IDENTIFIER) {
+                        return !isControlKeyword(tokens.get(i - 1).lexeme);
+                    }
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static int findUnclosedBlockLine(List<Token> tokens, int idx) {
+        int depth = 0;
+        int lastOpenLine = -1;
+        for (int i = 0; i < idx; i++) {
+            Token t = tokens.get(i);
+            if (t.type == TokenType.LBRACE) {
+                depth++;
+                lastOpenLine = t.line;
+            } else if (t.type == TokenType.RBRACE) {
+                depth--;
+            }
+        }
+        return depth > 0 ? lastOpenLine : -1;
+    }
+
+    private static boolean isExpressionToken(TokenType type) {
+        return type == TokenType.IDENTIFIER || type == TokenType.INT_LITERAL
+            || type == TokenType.FLOAT_LITERAL || type == TokenType.STRING_LITERAL;
+    }
+
+    private static boolean isInFuncParams(List<Token> tokens, int idx) {
+        for (int i = idx - 1; i >= 0; i--) {
+            if (tokens.get(i).type == TokenType.LPAREN) {
+                return i > 0 && tokens.get(i - 1).type == TokenType.IDENTIFIER;
+            }
+            if (tokens.get(i).type == TokenType.RBRACE || tokens.get(i).type == TokenType.SEMICOLON) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isInForHeaderUpdate(List<Token> tokens, int idx) {
+        int semi = 0;
+        for (int i = idx - 1; i >= 0; i--) {
+            Token t = tokens.get(i);
+            if (t.type == TokenType.FOR) {
+                return semi >= 2;
+            }
+            if (t.type == TokenType.SEMICOLON) {
+                semi++;
+            }
+        }
+        return false;
+    }
+
+    private static String checkSpecificError(String topo, Token tokenAtual, int idx, List<Token> tokens, int linha, List<StackItem> pilha, List<String> erros) {
+
+        if (tokenAtual.type == TokenType.INT_LITERAL ||
+            tokenAtual.type == TokenType.FLOAT_LITERAL ||
+            tokenAtual.type == TokenType.STRING_LITERAL) {
+            if (idx + 1 < tokens.size() && tokens.get(idx + 1).type == TokenType.ASSIGN) {
+                return "Erro na linha " + linha + ": Identificador esperado à esquerda do operador de atribuição '='.";
+            }
+        }
+
+
+        if (topo.equals("FUNC_REST") && tokenAtual.type == TokenType.LPAREN) {
+            return "Erro na linha " + linha + ": Nome da função esperado após 'func'.";
+        }
+
+
+        if (topo.equals("DECL_REST") && tokenAtual.type == TokenType.COMMA) {
+            if (idx > 0) {
+                String varName = tokens.get(idx - 1).lexeme;
+                return "Erro na linha " + linha + ": Ponto e vírgula ';' esperado após o identificador '" + varName + "'.";
+            }
+        }
+
+
+        if (topo.equals("EXP") && tokenAtual.type == TokenType.RPAREN) {
+            if (idx > 0 && tokens.get(idx - 1).type == TokenType.LPAREN) {
+                String controle = "";
+                for (int i = idx - 2; i >= 0; i--) {
+                    Token t = tokens.get(i);
+                    if (t.lexeme.equals(";") || t.lexeme.equals("{") || t.lexeme.equals("}")) {
+                        break;
+                    }
+                    if (t.type == TokenType.IF) {
+                        controle = "if";
+                        break;
+                    }
+                    if (t.type == TokenType.WHILE) {
+                        controle = "while";
+                        break;
+                    }
+                }
+                if (!controle.isEmpty()) {
+                    return "Erro na linha " + linha + ": Expressão condicional esperada dentro dos parênteses do '" + controle + "'.";
+                }
+            }
+        }
+
+
+        if (topo.equals("PARAM") && tokenAtual.type == TokenType.IDENTIFIER) {
+            if (idx > 0 && tokens.get(idx - 1).type == TokenType.COMMA) {
+                return "Erro na linha " + linha + ": Tipo de dado esperado para o parâmetro '" + tokenAtual.lexeme + "'.";
+            }
+        }
+
+
+        if (topo.equals("PARAM") && tokenAtual.type == TokenType.RPAREN) {
+            if (idx > 0 && tokens.get(idx - 1).type == TokenType.COMMA) {
+                return "Erro na linha " + linha + ": Identificador ou definição de parâmetro esperada após a vírgula ','.";
+            }
+        }
+
+
+        if (topo.equals("EXP") && (tokenAtual.type == TokenType.INT || tokenAtual.type == TokenType.FLOAT || tokenAtual.type == TokenType.STRING)) {
+            String controle = "";
+            for (int i = idx - 1; i >= 0; i--) {
+                Token t = tokens.get(i);
+                if (t.lexeme.equals(";") || t.lexeme.equals("{") || t.lexeme.equals("}")) {
+                    break;
+                }
+                if (t.type == TokenType.IF) {
+                    controle = "if";
+                    break;
+                }
+                if (t.type == TokenType.WHILE) {
+                    controle = "while";
+                    break;
+                }
+            }
+            if (!controle.isEmpty()) {
+                return "Erro na linha " + linha + ": Expressão esperada; declarações de variáveis não são permitidas na condição do '" + controle + "'.";
+            }
+        }
+
+
+        if (topo.equals("identifier")) {
+            boolean isReserved = false;
+            switch (tokenAtual.type) {
+                case IF: case ELSE: case WHILE: case FOR: case SWITCH: case CASE: case DEFAULT:
+                case FUNC: case PROC: case RETURN: case BREAK: case CONTINUE:
+                case INT: case FLOAT: case STRING:
+                    isReserved = true;
+                    break;
+                default:
+                    break;
+            }
+            if (isReserved) {
+                String tipoAnterior = "";
+                if (idx > 0) {
+                    tipoAnterior = tokens.get(idx - 1).lexeme;
+                }
+                return "Erro na linha " + linha + ": Identificador esperado após o tipo de dado '" + tipoAnterior + "'. A palavra '" + tokenAtual.lexeme + "' é reservada.";
+            }
+        }
+
+
+        if (topo.equals("BLOCO") && tokenAtual.type == TokenType.SEMICOLON) {
+            boolean isSubroutine = false;
+            for (int i = idx - 1; i >= 0; i--) {
+                Token t = tokens.get(i);
+                if (t.lexeme.equals(";") || t.lexeme.equals("{") || t.lexeme.equals("}")) {
+                    break;
+                }
+                if (t.type == TokenType.FUNC || t.type == TokenType.PROC) {
+                    isSubroutine = true;
+                    break;
+                }
+            }
+            if (isSubroutine) {
+                return "Erro na linha " + linha + ": Abre chaves '{' esperado para iniciar o corpo da função.";
+            }
+        }
+
+
+
+        if (topo.equals("lparen") && tokenAtual.type == TokenType.IDENTIFIER) {
+            if (idx > 0 && tokens.get(idx - 1).type == TokenType.SWITCH) {
+                return "Erro na linha " + linha + ": Parênteses () esperados ao redor da expressão de escolha do 'switch'.";
+            }
+        }
+
+
+        if (topo.equals("rparen") && tokenAtual.type == TokenType.LBRACE) {
+            boolean hasSwitchNear = false;
+            for (int i = idx - 1; i >= Math.max(0, idx - 4); i--) {
+                if (tokens.get(i).type == TokenType.SWITCH) {
+                    hasSwitchNear = true;
+                    break;
+                }
+            }
+            if (hasSwitchNear) {
+                return "";
+            }
+        }
+
+
+        if (topo.equals("semicolon") && tokenAtual.type == TokenType.NOT) {
+            return "Erro na linha " + linha + ": Sintaxe de expressão inválida. O operador '!' deve preceder a expressão.";
+        }
+
+
+        if (topo.equals("LG") && tokenAtual.type == TokenType.RBRACE) {
+            return "Erro na linha " + linha + ": Token inesperado '}' fora de qualquer declaração de bloco.";
+        }
+
+
+        if (topo.equals("semicolon") && tokenAtual.type == TokenType.COMMA) {
+            if (pilhaContains(pilha, "ATRIB_S")) {
+                return "Erro na linha " + linha + ": Ponto e vírgula ';' esperado para separar as seções do laço 'for'.";
+            }
+        }
+
+
+        if (topo.equals("ATRIB_S") && tokenAtual.type == TokenType.RPAREN) {
+            if (pilhaContains(pilha, "BLOCO")) {
+                return "";
+            }
+        }
+
+
+        if ((topo.equals("DECL_REST") || topo.equals("EXP") || topo.equals("EXP_OPC") || topo.equals("DECL_REST_FOR")) &&
+            tokenAtual.type == TokenType.LBRACKET) {
+            return "Erro na linha " + linha + ": Token inesperado '[' após o identificador. Vetores não são suportados na linguagem.";
+        }
+
+
+        if (topo.equals("BLOCO") && idx > 0 && tokens.get(idx - 1).type == TokenType.ELSE) {
+            return "Erro na linha " + linha + ": Abre chaves '{' ou estrutura condicional 'if' esperada após a palavra-chave 'else'.";
+        }
+
+
+        if (topo.equals("semicolon") && idx > 0 &&
+            (tokens.get(idx - 1).type == TokenType.BREAK || tokens.get(idx - 1).type == TokenType.CONTINUE)) {
+            return "Erro na linha " + linha + ": Ponto e vírgula ';' esperado imediatamente após a palavra-chave '" + tokens.get(idx - 1).lexeme + "'.";
+        }
+
+
+        if (topo.equals("assign") && tokenAtual.type == TokenType.SEMICOLON) {
+            boolean breakContinueNear = false;
+            for (int i = idx - 1; i >= Math.max(0, idx - 4); i--) {
+                if (tokens.get(i).type == TokenType.BREAK || tokens.get(i).type == TokenType.CONTINUE) {
+                    breakContinueNear = true;
+                    break;
+                }
+            }
+            if (breakContinueNear) {
+                return "";
+            }
+        }
+
+
+        if ((topo.equals("EXP") || topo.equals("E_AND") || topo.equals("E_COMP") || topo.equals("E_ADD") || topo.equals("E_MULT") || topo.equals("E_UN") || topo.equals("FINAL") || topo.equals("LITERAL")) &&
+            idx > 0 && tokens.get(idx - 1).type == TokenType.ASSIGN) {
+            if (tokenAtual.type == TokenType.IF || tokenAtual.type == TokenType.WHILE || tokenAtual.type == TokenType.FOR || tokenAtual.type == TokenType.SWITCH || tokenAtual.type == TokenType.FUNC || tokenAtual.type == TokenType.PROC || tokenAtual.type == TokenType.LBRACE) {
+                return "Erro na linha " + linha + ": Expressão matemática, lógica ou constante esperada após o operador '='.";
+            }
+        }
+
+
+        if ((topo.equals("PARAM") || topo.equals("EXP") || topo.equals("E_AND") || topo.equals("E_COMP") || topo.equals("E_ADD") || topo.equals("E_MULT") || topo.equals("E_UN") || topo.equals("FINAL") || topo.equals("LITERAL")) &&
+            tokenAtual.type == TokenType.COMMA && idx > 0 && tokens.get(idx - 1).type == TokenType.COMMA) {
+            return "Erro na linha " + linha + ": Tipo de dado ou parâmetro esperado após a vírgula ','.";
+        }
+
+
+        if (topo.equals("rbrace") && (tokenAtual.type == TokenType.CASE || tokenAtual.type == TokenType.DEFAULT)) {
+            if (!pilhaContains(pilha, "SWITCH_S")) {
+                return "Erro na linha " + linha + ": Instrução 'case' inválida fora de um escopo de 'switch' correspondente.";
+            }
+        }
+
+
+        if (topo.equals("LITERAL") && tokenAtual.type == TokenType.IDENTIFIER) {
+            return "Erro na linha " + linha + ": Valor constante literal esperado após a palavra-chave 'case'.";
+        }
+
+
+        if (topo.equals("rparen") && tokenAtual.type == TokenType.LBRACE) {
+            boolean isWhile = false;
+            for (int i = idx - 1; i >= 0; i--) {
+                Token t = tokens.get(i);
+                if (t.lexeme.equals(";") || t.lexeme.equals("{") || t.lexeme.equals("}")) {
+                    break;
+                }
+                if (t.type == TokenType.WHILE) {
+                    isWhile = true;
+                    break;
+                }
+            }
+            if (isWhile) {
+                return "Erro na linha " + linha + ": Fecha parênteses ')' esperado.";
+            }
+        }
+
+
+        if (topo.equals("assign") && tokenAtual.type == TokenType.EQUAL_EQUAL) {
+            return "Erro na linha " + linha + ": Sintaxe de expressão inválida.";
+        }
+
+
+        if (topo.equals("identifier") && tokenAtual.type == TokenType.LPAREN) {
+            if (idx > 0 && (tokens.get(idx - 1).type == TokenType.PROC || tokens.get(idx - 1).type == TokenType.FUNC)) {
+                return "Erro na linha " + linha + ": Identificador esperado após a palavra-chave '" + tokens.get(idx - 1).lexeme + "'.";
+            }
+        }
+
+
+        if (topo.equals("identifier") && pilhaContains(pilha, "PARAM")) {
+            if (tokenAtual.type == TokenType.COMMA || tokenAtual.type == TokenType.RPAREN) {
+                if (idx > 0) {
+                    Token prev = tokens.get(idx - 1);
+                    if (prev.type == TokenType.INT || prev.type == TokenType.FLOAT || prev.type == TokenType.STRING
+                        || prev.type == TokenType.COMMA) {
+                        return "Erro na linha " + linha + ": esperado 'identificador', encontrado '" + tokenAtual.lexeme + "'.";
+                    }
+                }
+            }
+        }
+
+
+        if (topo.equals("assign") && tokenAtual.type == TokenType.PLUS && isInForHeaderUpdate(tokens, idx)) {
+            if (idx > 0 && tokens.get(idx - 1).type == TokenType.IDENTIFIER) {
+                return "Erro na linha " + linha + ": Expressão ou valor esperado.";
+            }
+        }
+
+
+        if (tokenAtual.type == TokenType.EOF) {
+            int switchLine = findUnclosedSwitchLine(tokens, idx);
+            if (switchLine > 0) {
+                return "Erro na linha " + switchLine + ": Fecha chaves '}' esperado para encerrar o bloco do 'switch'.";
+            }
+            int blockLine = findUnclosedBlockLine(tokens, idx);
+            if (blockLine > 0) {
+                return "Erro na linha " + blockLine + ": Fim de arquivo inesperado. Fecha chaves '}' esperado para encerrar o bloco.";
+            }
+        }
+
+
+        if (tokenAtual.type == TokenType.DEFAULT) {
+            boolean hasDefaultBefore = false;
+            for (int i = idx - 1; i >= 0; i--) {
+                Token t = tokens.get(i);
+                if (t.type == TokenType.SWITCH) {
+                    break;
+                }
+                if (t.type == TokenType.DEFAULT) {
+                    hasDefaultBefore = true;
+                    break;
+                }
+            }
+            if (hasDefaultBefore) {
+                return "Erro na linha " + linha + ": Apenas uma cláusula 'default' é permitida dentro da estrutura 'switch'.";
+            }
+        }
+
+
+        if (topo.equals("DECL_REST") && (tokenAtual.type == TokenType.RBRACE || tokenAtual.type == TokenType.EOF)) {
+            if (idx > 0 && tokens.get(idx - 1).type == TokenType.IDENTIFIER) {
+                if (idx > 1 && (tokens.get(idx - 2).type == TokenType.INT || tokens.get(idx - 2).type == TokenType.FLOAT || tokens.get(idx - 2).type == TokenType.STRING)) {
+                    return "Erro na linha " + linha + ": Ponto e vírgula ';' esperado após o identificador '" + tokens.get(idx - 1).lexeme + "'.";
+                }
+            }
+        }
+
+
+        if ((topo.equals("E_UN") || topo.equals("FINAL") || topo.equals("LITERAL")) && tokenAtual.type == TokenType.RPAREN) {
+            if (idx > 0 && tokens.get(idx - 1).type == TokenType.NOT) {
+                return "Erro na linha " + linha + ": Expressão lógica esperada após o operador de negação unário '!'.";
+            }
+        }
+
+
+        for (String erro : erros) {
+            if (erro.startsWith("Erro na linha " + linha + ":")) {
+                if (erro.contains("Expressão matemática, lógica ou constante esperada") ||
+                    erro.contains("Token inesperado '[' após o identificador") ||
+                    erro.contains("Ponto e vírgula ';' esperado imediatamente após a palavra-chave") ||
+                    erro.contains("Ponto e vírgula ';' esperado para separar as seções") ||
+                    erro.contains("Pelo menos um rótulo 'case' ou 'default'") ||
+                    erro.contains("Tipo de dado ou parâmetro esperado após a vírgula") ||
+                    erro.contains("Instrução 'case' inválida fora de um escopo") ||
+                    erro.contains("Declarações de variáveis devem vir no início do escopo") ||
+                    erro.contains("Parênteses () esperados ao redor dos argumentos") ||
+                    erro.contains("Vírgula ',' esperada para separar os argumentos") ||
+                    erro.contains("Sintaxe de expressão condicional inválida. Operando esperado") ||
+                    erro.contains("Expressão inválida após o operador de atribuição") ||
+                    erro.contains("Valor constante literal esperado após") ||
+                    erro.contains("Ponto e vírgula ';' esperado após a expressão de retorno") ||
+                    erro.contains("Instrução 'return' inválida fora de") ||
+                    erro.contains("Instrução vazia ou inválida detectada") ||
+                    erro.contains("Parênteses '(' esperado após a palavra-chave 'for'") ||
+                    erro.contains("Parênteses () esperados após 'if'") ||
+                    erro.contains("Fecha parênteses ')' esperado") ||
+                    erro.contains("Sintaxe de expressão inválida") ||
+                    erro.contains("Identificador esperado após a palavra-chave") ||
+                    erro.contains("Identificador esperado à esquerda do operador de atribuição") ||
+                    erro.contains("Fecha chaves '}' esperado para encerrar") ||
+                    erro.contains("Fim de arquivo inesperado") ||
+                    erro.contains("Abre chaves '{' esperado após a condição") ||
+                    erro.contains("esperado 'abre chaves '{'") ||
+                    erro.contains("Apenas uma cláusula 'default' é permitida") ||
+                    erro.contains("Ponto e vírgula ';' esperado após o identificador") ||
+                    erro.contains("Expressão lógica esperada após o operador") ||
+                    erro.contains("Bloco de chaves anônimo ou solto não é permitido") ||
+                    erro.contains("Declaração de variável, função ou procedimento esperada no escopo global")) {
+                    return "";
+                }
+            }
+        }
+
+
+        if (hasErrorContaining(erros, "Parênteses () esperados após 'if'") &&
+            (topo.equals("ELSE_OPC") || getFriendlyExpected(topo).contains("ELSE_OPC"))) {
+            return "";
+        }
+        if (hasErrorContaining(erros, "Abre chaves '{' esperado após a condição")) {
+            if (topo.equals("ELSE_OPC") || getFriendlyExpected(topo).contains("ELSE_OPC")) {
+                return "";
+            }
+            if (topo.equals("LISTA_COM") && tokenAtual.type == TokenType.SEMICOLON) {
+                return "";
+            }
+        }
+        if (hasErrorContaining(erros, "Instrução 'return' inválida fora de") && topo.equals("EL")) {
+            return "";
+        }
+        if (hasErrorContaining(erros, "esperado 'identificador'") && isInFuncParams(tokens, idx)
+            && tokenAtual.type != TokenType.COMMA) {
+            return "";
+        }
+        if (hasErrorContaining(erros, "Declaração de variável, função ou procedimento esperada no escopo global")
+            && tokenAtual.lexeme.equals("void")) {
+            return "";
+        }
+        if (hasErrorContaining(erros, "esperado 'abre chaves '{'") && topo.equals("LISTA_COM")) {
+            return "";
+        }
+        if (hasErrorContaining(erros, "Identificador esperado à esquerda do operador de atribuição")
+            && topo.equals("assign")) {
+            return "";
+        }
+
+        return null;
+    }
+
+
+
+
     public static void parse(List<Token> tokens, String outputJsonPath) {
         int idx = 0;
         int lastErrorIdx = -1;
         List<StackItem> pilha = new ArrayList<>();
         CSTNode root = new CSTNode("P");
-        
+
         pilha.add(new StackItem("$", new CSTNode("$")));
         pilha.add(new StackItem("P", root));
         List<String> erros = new ArrayList<>();
@@ -659,82 +1191,814 @@ public class Parser {
             String tipo = getGrammarSymbol(tokenAtual);
             int linha = tokenAtual.line;
 
+
+            if ((tokenAtual.type == TokenType.AND || tokenAtual.type == TokenType.OR) &&
+                idx > 0 &&
+                (tokens.get(idx - 1).type == TokenType.AND || tokens.get(idx - 1).type == TokenType.OR)) {
+
+                String msg = "Erro na linha " + linha + ": Sintaxe de expressão condicional inválida. Operando esperado entre os operadores '" + tokens.get(idx - 1).lexeme + "' e '" + tokenAtual.lexeme + "'.";
+                System.out.println(msg);
+                erros.add(msg);
+                lastErrorIdx = idx;
+
+                idx++;
+                continue;
+            }
+
+
+            if (isInsideFunctionCallArgs(tokens, idx) && isExpressionToken(tokenAtual.type)
+                && idx > 0 && isExpressionToken(tokens.get(idx - 1).type)) {
+                String msg = "Erro na linha " + linha + ": Vírgula ',' esperada para separar os argumentos na chamada da função.";
+                System.out.println(msg);
+                erros.add(msg);
+                lastErrorIdx = idx;
+                while (idx < tokens.size()) {
+                    Token t = tokens.get(idx);
+                    if (t.type == TokenType.RPAREN || t.type == TokenType.SEMICOLON || t.type == TokenType.EOF) {
+                        break;
+                    }
+                    idx++;
+                }
+                while (pilha.size() > 0) {
+                    String sym = pilha.get(pilha.size() - 1).symbol;
+                    if (sym.equals("rparen") || sym.equals("semicolon") || sym.equals("$")) {
+                        break;
+                    }
+                    pilha.remove(pilha.size() - 1);
+                }
+                continue;
+            }
+
+
+            if (topo.equals("assign") && tokenAtual.type == TokenType.PLUS
+                && idx > 0 && tokens.get(idx - 1).type == TokenType.IDENTIFIER
+                && isInForHeaderUpdate(tokens, idx)) {
+                String msg = "Erro na linha " + linha + ": Expressão ou valor esperado.";
+                System.out.println(msg);
+                erros.add(msg);
+                lastErrorIdx = idx;
+                idx++;
+                if (idx < tokens.size() && tokens.get(idx).type == TokenType.PLUS) {
+                    idx++;
+                }
+                while (idx < tokens.size() && tokens.get(idx).type != TokenType.RPAREN) {
+                    idx++;
+                }
+                while (pilha.size() > 0) {
+                    String sym = pilha.get(pilha.size() - 1).symbol;
+                    if (sym.equals("rparen") || sym.equals("BLOCO") || sym.equals("FOR_S")) {
+                        break;
+                    }
+                    pilha.remove(pilha.size() - 1);
+                }
+                continue;
+            }
+
+
+            if ((tokenAtual.type == TokenType.INT_LITERAL || tokenAtual.type == TokenType.FLOAT_LITERAL
+                || tokenAtual.type == TokenType.STRING_LITERAL)
+                && idx + 1 < tokens.size() && tokens.get(idx + 1).type == TokenType.ASSIGN) {
+                String msg = "Erro na linha " + linha + ": Identificador esperado à esquerda do operador de atribuição '='.";
+                System.out.println(msg);
+                erros.add(msg);
+                lastErrorIdx = idx;
+                while (idx < tokens.size()) {
+                    Token t = tokens.get(idx);
+                    if (t.type == TokenType.SEMICOLON || t.type == TokenType.RBRACE || t.type == TokenType.EOF) {
+                        break;
+                    }
+                    idx++;
+                }
+                if (idx < tokens.size() && tokens.get(idx).type == TokenType.SEMICOLON) {
+                    idx++;
+                }
+                while (pilha.size() > 0) {
+                    String sym = pilha.get(pilha.size() - 1).symbol;
+                    if (sym.equals("LISTA_COM") || sym.equals("LG") || sym.equals("$") || sym.equals("semicolon")) {
+                        break;
+                    }
+                    pilha.remove(pilha.size() - 1);
+                }
+                continue;
+            }
+
+
+            if ((topo.equals("EL") || topo.equals("LG")) && tokenAtual.type == TokenType.IDENTIFIER
+                && tokenAtual.lexeme.equals("void")) {
+                String msg = "Erro na linha " + linha + ": Declaração de variável, função ou procedimento esperada no escopo global.";
+                System.out.println(msg);
+                erros.add(msg);
+                lastErrorIdx = idx;
+                int braceCount = 0;
+                boolean started = false;
+                while (idx < tokens.size()) {
+                    Token t = tokens.get(idx);
+                    if (t.type == TokenType.LBRACE) {
+                        braceCount++;
+                        started = true;
+                    } else if (t.type == TokenType.RBRACE) {
+                        braceCount--;
+                        idx++;
+                        if (started && braceCount == 0) {
+                            break;
+                        }
+                        continue;
+                    }
+                    idx++;
+                }
+                continue;
+            }
+
+
+            if (topo.equals("BLOCO") && tokenAtual.type != TokenType.LBRACE) {
+                boolean afterIf = false;
+                for (int i = idx - 1; i >= 0; i--) {
+                    Token t = tokens.get(i);
+                    if (t.type == TokenType.IF) {
+                        afterIf = true;
+                        break;
+                    }
+                    if (t.type == TokenType.SEMICOLON || t.type == TokenType.LBRACE) {
+                        break;
+                    }
+                }
+                if (afterIf) {
+                    String msg = "Erro na linha " + linha + ": Abre chaves '{' esperado após a condição.";
+                    System.out.println(msg);
+                    erros.add(msg);
+                    lastErrorIdx = idx;
+                    while (idx < tokens.size()) {
+                        Token t = tokens.get(idx);
+                        if (t.type == TokenType.SEMICOLON) {
+                            idx++;
+                            break;
+                        }
+                        if (t.type == TokenType.RBRACE || t.type == TokenType.EOF) {
+                            break;
+                        }
+                        idx++;
+                    }
+                    while (pilha.size() > 0) {
+                        String sym = pilha.get(pilha.size() - 1).symbol;
+                        if (sym.equals("LISTA_COM") || sym.equals("LG") || sym.equals("$")) {
+                            break;
+                        }
+                        pilha.remove(pilha.size() - 1);
+                    }
+                    continue;
+                }
+            }
+
+
+            if (topo.equals("lbrace") && (tokenAtual.type == TokenType.CASE || tokenAtual.type == TokenType.DEFAULT)) {
+                boolean afterSwitch = false;
+                for (int i = idx - 1; i >= 0; i--) {
+                    Token t = tokens.get(i);
+                    if (t.type == TokenType.SWITCH) {
+                        afterSwitch = true;
+                        break;
+                    }
+                    if (t.type == TokenType.LBRACE || t.type == TokenType.SEMICOLON) {
+                        break;
+                    }
+                }
+                if (afterSwitch) {
+                    String msg = "Erro na linha " + linha + ": esperado 'abre chaves '{'', encontrado '" + tokenAtual.lexeme + "'.";
+                    System.out.println(msg);
+                    erros.add(msg);
+                    lastErrorIdx = idx;
+                    pilha.remove(pilha.size() - 1);
+                    while (idx < tokens.size()) {
+                        Token t = tokens.get(idx);
+                        if (t.type == TokenType.RBRACE || t.type == TokenType.EOF) {
+                            break;
+                        }
+                        idx++;
+                    }
+                    continue;
+                }
+            }
+
+
+            if (isInFuncParams(tokens, idx) && idx > 0) {
+                Token prev = tokens.get(idx - 1);
+                boolean missingIdAfterType = prev.type == TokenType.INT || prev.type == TokenType.FLOAT
+                    || prev.type == TokenType.STRING;
+                if (missingIdAfterType
+                    && (tokenAtual.type == TokenType.COMMA || tokenAtual.type == TokenType.RPAREN)) {
+                    if (!hasErrorContaining(erros, "esperado 'identificador'")) {
+                        String msg = "Erro na linha " + linha + ": esperado 'identificador', encontrado '" + tokenAtual.lexeme + "'.";
+                        System.out.println(msg);
+                        erros.add(msg);
+                        lastErrorIdx = idx;
+                    }
+                    while (idx < tokens.size() && tokens.get(idx).type != TokenType.RPAREN) {
+                        idx++;
+                    }
+                    while (pilha.size() > 0) {
+                        String sym = pilha.get(pilha.size() - 1).symbol;
+                        if (sym.equals("rparen") || sym.equals("BLOCO") || sym.equals("lbrace")) {
+                            break;
+                        }
+                        pilha.remove(pilha.size() - 1);
+                    }
+                    if (idx < tokens.size() && tokens.get(idx).type == TokenType.RPAREN) {
+                        idx++;
+                    }
+                    continue;
+                }
+            }
+
+
+            if (topo.equals("FINAL_L") &&
+                (tipo.equals("identifier") || tipo.equals("int_literal") || tipo.equals("float_literal") || tipo.equals("string_literal")) &&
+                idx > 0 && tokens.get(idx - 1).type == TokenType.IDENTIFIER &&
+                !isInsideFunctionCallArgs(tokens, idx) &&
+                !tokens.get(idx - 1).lexeme.equals("void")) {
+
+                String funcName = tokens.get(idx - 1).lexeme;
+                String msg = "Erro na linha " + linha + ": Parênteses () esperados ao redor dos argumentos na chamada da função '" + funcName + "'.";
+                System.out.println(msg);
+                erros.add(msg);
+                lastErrorIdx = idx;
+
+
+                while (idx < tokens.size()) {
+                    Token t = tokens.get(idx);
+                    if (t.type == TokenType.SEMICOLON || t.type == TokenType.RBRACE || t.type == TokenType.EOF) {
+                        break;
+                    }
+                    idx++;
+                }
+
+                pilha.remove(pilha.size() - 1);
+                continue;
+            }
+
+
+            if (topo.equals("assign") &&
+                (tipo.equals("identifier") || tipo.equals("int_literal") || tipo.equals("float_literal") || tipo.equals("string_literal")) &&
+                pilha.size() >= 3 &&
+                pilha.get(pilha.size() - 2).symbol.equals("EXP") &&
+                pilha.get(pilha.size() - 3).symbol.equals("semicolon") &&
+                idx > 0 && tokens.get(idx - 1).type == TokenType.IDENTIFIER &&
+                !tokens.get(idx - 1).lexeme.equals("void")) {
+
+                String funcName = tokens.get(idx - 1).lexeme;
+                String msg = "Erro na linha " + linha + ": Parênteses () esperados ao redor dos argumentos na chamada da função '" + funcName + "'.";
+                System.out.println(msg);
+                erros.add(msg);
+                lastErrorIdx = idx;
+
+
+                while (idx < tokens.size()) {
+                    Token t = tokens.get(idx);
+                    if (t.type == TokenType.SEMICOLON || t.type == TokenType.RBRACE || t.type == TokenType.EOF) {
+                        break;
+                    }
+                    idx++;
+                }
+
+
+                pilha.remove(pilha.size() - 1);
+                pilha.remove(pilha.size() - 1);
+                continue;
+            }
+
+
+            if (tokenAtual.type == TokenType.ASSIGN && idx > 0 && tokens.get(idx - 1).type == TokenType.IDENTIFIER) {
+                boolean assignBefore = false;
+                for (int i = idx - 2; i >= 0; i--) {
+                    Token t = tokens.get(i);
+                    if (t.type == TokenType.SEMICOLON || t.type == TokenType.LBRACE || t.type == TokenType.RBRACE) {
+                        break;
+                    }
+                    if (t.type == TokenType.ASSIGN) {
+                        assignBefore = true;
+                        break;
+                    }
+                }
+                if (assignBefore) {
+                    String msg = "Erro na linha " + linha + ": Expressão inválida após o operador de atribuição '='.";
+                    System.out.println(msg);
+                    erros.add(msg);
+                    lastErrorIdx = idx;
+
+                    while (idx < tokens.size()) {
+                        Token t = tokens.get(idx);
+                        if (t.type == TokenType.SEMICOLON || t.type == TokenType.RBRACE || t.type == TokenType.EOF) {
+                            break;
+                        }
+                        idx++;
+                    }
+
+                    while (pilha.size() > 0) {
+                        String sym = pilha.get(pilha.size() - 1).symbol;
+                        if (sym.equals("semicolon") || sym.equals("$")) {
+                            break;
+                        }
+                        pilha.remove(pilha.size() - 1);
+                    }
+                    continue;
+                }
+            }
+
+
+            if (topo.equals("semicolon") && tokenAtual.type == TokenType.COMMA) {
+                boolean hasReturn = false;
+                for (int i = idx - 1; i >= 0; i--) {
+                    Token t = tokens.get(i);
+                    if (t.type == TokenType.SEMICOLON || t.type == TokenType.LBRACE || t.type == TokenType.RBRACE) {
+                        break;
+                    }
+                    if (t.type == TokenType.RETURN) {
+                        hasReturn = true;
+                        break;
+                    }
+                }
+                if (hasReturn) {
+                    String msg = "Erro na linha " + linha + ": Ponto e vírgula ';' esperado após a expressão de retorno.";
+                    System.out.println(msg);
+                    erros.add(msg);
+                    lastErrorIdx = idx;
+
+                    while (idx < tokens.size()) {
+                        Token t = tokens.get(idx);
+                        if (t.type == TokenType.SEMICOLON || t.type == TokenType.RBRACE || t.type == TokenType.EOF) {
+                            break;
+                        }
+                        idx++;
+                    }
+                    continue;
+                }
+            }
+
+
+            if (topo.equals("LISTA_COM") && tokenAtual.type == TokenType.SEMICOLON) {
+                String msg = "Erro na linha " + linha + ": Instrução vazia ou inválida detectada.";
+                System.out.println(msg);
+                erros.add(msg);
+                lastErrorIdx = idx;
+                idx++;
+                continue;
+            }
+
+
+            if (topo.equals("lparen") && idx > 0 && tokens.get(idx - 1).type == TokenType.FOR) {
+                if (tokenAtual.type != TokenType.LPAREN) {
+                    String msg = "Erro na linha " + linha + ": Parênteses '(' esperado após a palavra-chave 'for'.";
+                    System.out.println(msg);
+                    erros.add(msg);
+                    lastErrorIdx = idx;
+                    pilha.remove(pilha.size() - 1);
+                    continue;
+                }
+            }
+
+
+            if (topo.equals("LISTA_COM") && tokenAtual.type == TokenType.LBRACE) {
+                String msg = "Erro na linha " + linha + ": Bloco de chaves anônimo ou solto não é permitido.";
+                System.out.println(msg);
+                erros.add(msg);
+                lastErrorIdx = idx;
+
+                int lbraceCount = 1;
+                idx++;
+                while (idx < tokens.size() && lbraceCount > 0) {
+                    Token t = tokens.get(idx);
+                    if (t.type == TokenType.LBRACE) {
+                        lbraceCount++;
+                    } else if (t.type == TokenType.RBRACE) {
+                        lbraceCount--;
+                    }
+                    idx++;
+                }
+                continue;
+            }
+
+
+            if (topo.equals("LITERAL") && tokenAtual.type == TokenType.IDENTIFIER &&
+                idx > 0 && tokens.get(idx - 1).type == TokenType.CASE) {
+                String msg = "Erro na linha " + linha + ": Valor constante literal esperado após a palavra-chave 'case'.";
+                System.out.println(msg);
+                erros.add(msg);
+                lastErrorIdx = idx;
+                idx++;
+                if (idx < tokens.size() && tokens.get(idx).type == TokenType.COLON) {
+                    idx++;
+                }
+                pilha.remove(pilha.size() - 1);
+                if (!pilha.isEmpty() && pilha.get(pilha.size() - 1).symbol.equals("colon")) {
+                    pilha.remove(pilha.size() - 1);
+                }
+                continue;
+            }
+
+
+            if (topo.equals("EL") && tokenAtual.type == TokenType.RETURN) {
+                String msg = "Erro na linha " + linha + ": Instrução 'return' inválida fora de uma função ou procedimento.";
+                System.out.println(msg);
+                erros.add(msg);
+                lastErrorIdx = idx;
+                while (idx < tokens.size()) {
+                    Token t = tokens.get(idx);
+                    if (t.type == TokenType.SEMICOLON) {
+                        idx++;
+                        break;
+                    }
+                    if (t.type == TokenType.EOF) {
+                        break;
+                    }
+                    idx++;
+                }
+                if (!pilha.isEmpty() && pilha.get(pilha.size() - 1).symbol.equals("EL")) {
+                    pilha.remove(pilha.size() - 1);
+                }
+                continue;
+            }
+
+
+            if (tokenAtual.type == TokenType.DEFAULT && hasDuplicateDefaultBefore(tokens, idx)) {
+                String msg = "Erro na linha " + linha + ": Apenas uma cláusula 'default' é permitida dentro da estrutura 'switch'.";
+                System.out.println(msg);
+                erros.add(msg);
+                lastErrorIdx = idx;
+                idx++;
+                if (idx < tokens.size() && tokens.get(idx).type == TokenType.COLON) {
+                    idx++;
+                }
+                continue;
+            }
+
+
+            if (tokenAtual.type == TokenType.EOF) {
+                int switchLine = findUnclosedSwitchLine(tokens, idx);
+                if (switchLine > 0) {
+                    String msg = "Erro na linha " + switchLine + ": Fecha chaves '}' esperado para encerrar o bloco do 'switch'.";
+                    System.out.println(msg);
+                    erros.add(msg);
+                    lastErrorIdx = idx;
+                    break;
+                }
+                int blockLine = findUnclosedBlockLine(tokens, idx);
+                if (blockLine > 0) {
+                    String msg = "Erro na linha " + blockLine + ": Fim de arquivo inesperado. Fecha chaves '}' esperado para encerrar o bloco.";
+                    System.out.println(msg);
+                    erros.add(msg);
+                    lastErrorIdx = idx;
+                    break;
+                }
+            }
+
             System.out.println("TOKEN: Token(" + tokenAtual.type + ", '" + tokenAtual.lexeme + "')");
-            
+
             if (topo.equals(tipo)) {
                 System.out.println("TOPO: " + topo);
                 System.out.println("TIPO: " + tipo);
                 System.out.println("DESEMPILHA " + topo);
                 System.out.println("VAI PARA O PRÓXIMO TOKEN\n");
-                
+
                 itemTopo.node.lexeme = tokenAtual.lexeme;
-                
+
                 pilha.remove(pilha.size() - 1);
                 idx++;
             } else if (NAO_TERMINAIS.contains(topo)) {
                 System.out.println("\nTOPO IGUAL A VARIÁVEL: " + topo);
+
+
+                if ((topo.equals("LG") || topo.equals("LISTA_COM")) &&
+                    (tipo.equals("case") || tipo.equals("default")) &&
+                    !pilhaContains(pilha, "SWITCH_S") &&
+                    !(tipo.equals("default") && hasDuplicateDefaultBefore(tokens, idx))) {
+
+                    String msg = "Erro na linha " + linha + ": Instrução 'case' inválida fora de um escopo de 'switch' correspondente.";
+                    System.out.println(msg);
+                    erros.add(msg);
+                    lastErrorIdx = idx;
+
+                    if (tipo.equals("case")) {
+                        idx++;
+                        if (idx < tokens.size()) {
+                            Token tNext = tokens.get(idx);
+                            if (tNext.type == TokenType.INT_LITERAL ||
+                                tNext.type == TokenType.FLOAT_LITERAL ||
+                                tNext.type == TokenType.STRING_LITERAL) {
+                                idx++;
+                            }
+                        }
+                    } else {
+                        idx++;
+                    }
+                    if (idx < tokens.size() && tokens.get(idx).type == TokenType.COLON) {
+                        idx++;
+                    }
+                    continue;
+                }
+
                 Map<String, Integer> entradaTabela = TABELA.getOrDefault(topo, Map.of());
                 System.out.println("ENTRADA_TABELA: " + entradaTabela);
 
                 Integer prodIdx = null;
-                // Resolução de conflito por lookahead (LL(2)) para COM e identifier
+
                 if (topo.equals("COM") && tipo.equals("identifier")) {
                     if (idx + 1 < tokens.size() && tokens.get(idx + 1).type == TokenType.LPAREN) {
-                        prodIdx = 26; // COM -> identifier lparen ARGS rparen semicolon
+                        prodIdx = 26;
                     } else {
-                        prodIdx = 21; // COM -> DECL
+                        prodIdx = 21;
                     }
                 } else {
                     prodIdx = entradaTabela.get(tipo);
                 }
-
                 if (prodIdx != null) {
+                    if (prodIdx == 3) {
+                        if (tokenAtual.type == TokenType.RETURN) {
+                            String msg = "Erro na linha " + linha + ": Instrução 'return' inválida fora de uma função ou procedimento.";
+                            System.out.println(msg);
+                            erros.add(msg);
+                        } else if (tokenAtual.type == TokenType.IDENTIFIER) {
+                            String msg = "Erro na linha " + linha + ": Declaração de variável, função ou procedimento esperada no escopo global.";
+                            System.out.println(msg);
+                            erros.add(msg);
+                        }
+                    }
+                    if (prodIdx == 21) {
+                        if (tokenAtual.type == TokenType.INT || tokenAtual.type == TokenType.FLOAT || tokenAtual.type == TokenType.STRING) {
+                            boolean executavelAntes = false;
+                            int braceCount = 0;
+                            for (int i = idx - 1; i >= 0; i--) {
+                                Token t = tokens.get(i);
+                                if (t.type == TokenType.RBRACE) {
+                                    braceCount++;
+                                } else if (t.type == TokenType.LBRACE) {
+                                    if (braceCount > 0) {
+                                        braceCount--;
+                                    } else {
+                                        break;
+                                    }
+                                } else if (braceCount == 0) {
+                                    if (t.type == TokenType.IF || t.type == TokenType.WHILE || t.type == TokenType.FOR ||
+                                        t.type == TokenType.SWITCH || t.type == TokenType.RETURN || t.type == TokenType.BREAK ||
+                                        t.type == TokenType.CONTINUE) {
+                                        executavelAntes = true;
+                                        break;
+                                    }
+                                    if (t.type == TokenType.ASSIGN && i - 2 >= 0) {
+                                        Token tPrev1 = tokens.get(i - 1);
+                                        Token tPrev2 = tokens.get(i - 2);
+                                        if (tPrev1.type == TokenType.IDENTIFIER &&
+                                            tPrev2.type != TokenType.INT && tPrev2.type != TokenType.FLOAT && tPrev2.type != TokenType.STRING) {
+                                            executavelAntes = true;
+                                            break;
+                                        }
+                                    }
+                                    if (t.type == TokenType.LPAREN && i - 1 >= 0) {
+                                        Token tPrev = tokens.get(i - 1);
+                                        if (tPrev.type == TokenType.IDENTIFIER) {
+                                            boolean isDefOrControl = false;
+                                            if (i - 2 >= 0) {
+                                                Token tPrev2 = tokens.get(i - 2);
+                                                if (tPrev2.type == TokenType.FUNC || tPrev2.type == TokenType.PROC ||
+                                                    tPrev2.type == TokenType.IF || tPrev2.type == TokenType.WHILE ||
+                                                    tPrev2.type == TokenType.FOR || tPrev2.type == TokenType.SWITCH ||
+                                                    tPrev2.type == TokenType.INT || tPrev2.type == TokenType.FLOAT || tPrev2.type == TokenType.STRING) {
+                                                    isDefOrControl = true;
+                                                }
+                                            }
+                                            if (!isDefOrControl) {
+                                                executavelAntes = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (executavelAntes) {
+                                String msg = "Erro na linha " + linha + ": Declarações de variáveis devem vir no início do escopo, antes de qualquer comando executável.";
+                                System.out.println(msg);
+                                erros.add(msg);
+                            }
+                        }
+                    }
+                    if (prodIdx == 37) {
+
+                        boolean inFunc = false;
+                        for (int i = idx - 1; i >= 0; i--) {
+                            Token t = tokens.get(i);
+                            if (t.type == TokenType.FUNC) {
+                                inFunc = true;
+                                break;
+                            }
+                            if (t.type == TokenType.PROC) {
+                                inFunc = false;
+                                break;
+                            }
+                        }
+                        if (inFunc) {
+                            String msg = "Erro na linha " + linha + ": Expressão de retorno esperada após a palavra-chave 'return'.";
+                            System.out.println(msg);
+                            erros.add(msg);
+                        }
+                    }
+                    if (prodIdx == 38) {
+                        if (idx + 5 < tokens.size() &&
+                            tokens.get(idx + 4).type == TokenType.LBRACE &&
+                            tokens.get(idx + 5).type == TokenType.RBRACE) {
+                            String msg = "Erro na linha " + tokens.get(idx + 4).line + ": Pelo menos um rótulo 'case' ou 'default' é esperado dentro do bloco 'switch'.";
+                            System.out.println(msg);
+                            erros.add(msg);
+                        }
+                    }
                     System.out.println("DESEMPILHA " + topo);
                     pilha.remove(pilha.size() - 1);
                     List<String> prod = PRODUCOES.get(prodIdx);
                     System.out.println("PRODUCAO: " + prod);
                     System.out.println(DESCRICAO_PRODUCAO.get(prodIdx));
-                    
+
                     List<StackItem> toPush = new ArrayList<>();
                     for (String simbolo : prod) {
                         CSTNode childNode = new CSTNode(simbolo);
                         itemTopo.node.children.add(childNode);
                         toPush.add(new StackItem(simbolo, childNode));
                     }
-                    
-                    // Empilha na ordem reversa
+
+
                     for (int i = toPush.size() - 1; i >= 0; i--) {
                         pilha.add(toPush.get(i));
                     }
                     System.out.println();
                 } else {
                     if (SILENT_NON_TERMINALS.contains(topo)) {
-                        // Desempilha silenciosamente pois é uma variável interna de recursão
+
                         pilha.remove(pilha.size() - 1);
                     } else {
+
+                        if (erros.size() > 0 && (topo.equals("LG") || topo.equals("LISTA_COM")) &&
+                            (tokenAtual.type == TokenType.SEMICOLON || tokenAtual.type == TokenType.RBRACE)) {
+                            idx++;
+                            continue;
+                        }
+
                         if (idx != lastErrorIdx) {
-                            String msg = "Erro na linha " + linha + ": " + getFriendlyExpected(topo) + ".";
-                            System.out.println(msg);
-                            erros.add(msg);
+                            String msg = checkSpecificError(topo, tokenAtual, idx, tokens, linha, pilha, erros);
+                            if (msg == null) {
+                                if (tokenAtual.type == TokenType.ELSE) {
+                                    msg = "Erro na linha " + linha + ": Estrutura 'else' sem 'if' correspondente.";
+                                } else {
+                                    msg = "Erro na linha " + linha + ": " + getFriendlyExpected(topo) + ".";
+                                }
+                            }
+                            if (msg != null && !msg.isEmpty()) {
+                                System.out.println(msg);
+                                erros.add(msg);
+                            }
                             lastErrorIdx = idx;
                         }
-                        
-                        // Error recovery: check follow set
-                        Set<String> followSet = FOLLOW.get(topo);
-                        if (tipo.equals("$") || (followSet != null && followSet.contains(tipo))) {
-                            // Pop topo without advancing input stream
-                            pilha.remove(pilha.size() - 1);
+
+                        if (topo.equals("LG") || topo.equals("LISTA_COM") || topo.equals("LISTA_CASES")) {
+                            Set<String> syncSet = new HashSet<>();
+                            if (topo.equals("LG")) {
+                                syncSet.addAll(List.of("int", "float", "string", "identifier", "func", "proc", "if", "while", "for", "switch", "return", "break", "continue", "$"));
+                            } else if (topo.equals("LISTA_COM")) {
+                                syncSet.addAll(List.of("int", "float", "string", "identifier", "if", "while", "for", "switch", "return", "break", "continue", "rbrace", "$"));
+                            } else {
+                                syncSet.addAll(List.of("case", "default", "rbrace", "$"));
+                            }
+
+                            while (idx < tokens.size()) {
+                                Token t = tokens.get(idx);
+                                String tSym = getGrammarSymbol(t);
+                                if (syncSet.contains(tSym)) {
+                                    break;
+                                }
+                                idx++;
+                            }
+                            if (idx >= tokens.size() - 1) {
+                                System.out.println("Sincronização atingiu o EOF. Removendo " + topo + " da pilha.");
+                                pilha.remove(pilha.size() - 1);
+                            }
+
                         } else {
-                            // Advance input stream
-                            idx++;
+                            Set<String> syncSet = new HashSet<>();
+                            syncSet.add("semicolon");
+                            syncSet.add("rbrace");
+                            syncSet.add("$");
+
+
+                            for (StackItem stackItem : pilha) {
+                                String sym = stackItem.symbol;
+                                if (!NAO_TERMINAIS.contains(sym)) {
+                                    syncSet.add(sym);
+                                }
+                            }
+
+                            while (idx < tokens.size()) {
+                                Token t = tokens.get(idx);
+                                String tSym = getGrammarSymbol(t);
+                                if (syncSet.contains(tSym)) {
+                                    break;
+                                }
+                                idx++;
+                            }
+
+
+                            pilha.remove(pilha.size() - 1);
                         }
                     }
                 }
             } else {
                 if (idx != lastErrorIdx) {
-                    String msg = "Erro na linha " + linha + ": esperado '" + getFriendlyExpected(topo) + "', encontrado '" + tokenAtual.lexeme + "'.";
-                    System.out.println(msg);
-                    erros.add(msg);
+                    String msg = checkSpecificError(topo, tokenAtual, idx, tokens, linha, pilha, erros);
+                    if (msg == null) {
+                        if (topo.equals("semicolon")) {
+
+                            boolean isForHeader = false;
+                            if (pilha.size() >= 6) {
+                                if (pilha.get(pilha.size() - 4).symbol.equals("ATRIB_S") &&
+                                    pilha.get(pilha.size() - 5).symbol.equals("rparen") &&
+                                    pilha.get(pilha.size() - 6).symbol.equals("BLOCO")) {
+                                    isForHeader = true;
+                                }
+                            }
+                            if (pilha.size() >= 4) {
+                                if (pilha.get(pilha.size() - 2).symbol.equals("ATRIB_S") &&
+                                    pilha.get(pilha.size() - 3).symbol.equals("rparen") &&
+                                    pilha.get(pilha.size() - 4).symbol.equals("BLOCO")) {
+                                    isForHeader = true;
+                                }
+                            }
+
+                            if (isForHeader) {
+                                msg = "Erro na linha " + linha + ": Cabeçalho do laço 'for' inválido. Esperadas três expressões separadas por ponto e vírgula.";
+                            } else {
+                                msg = "Erro na linha " + linha + ": Ponto e vírgula esperado no final da linha.";
+                            }
+                        } else if (topo.equals("lparen") || topo.equals("rparen")) {
+
+                            String estruturaIniciadora = "";
+                            for (int i = idx - 1; i >= 0; i--) {
+                                Token t = tokens.get(i);
+                                if (t.lexeme.equals(";") || t.lexeme.equals("{") || t.lexeme.equals("}")) {
+                                    break;
+                                }
+                                if (t.type == TokenType.IF) {
+                                    estruturaIniciadora = "if";
+                                    break;
+                                }
+                                if (t.type == TokenType.WHILE) {
+                                    estruturaIniciadora = "while";
+                                    break;
+                                }
+                                if (t.type == TokenType.FUNC || t.type == TokenType.PROC) {
+                                    estruturaIniciadora = "func";
+                                    break;
+                                }
+                                if (t.type == TokenType.FOR) {
+                                    estruturaIniciadora = "for";
+                                    break;
+                                }
+                            }
+
+
+                            boolean isFunctionCall = false;
+                            if (topo.equals("rparen") && (tokenAtual.type == TokenType.IDENTIFIER || tokenAtual.type == TokenType.INT_LITERAL || tokenAtual.type == TokenType.FLOAT_LITERAL || tokenAtual.type == TokenType.STRING_LITERAL)) {
+                                for (int i = idx - 1; i >= 0; i--) {
+                                    Token t = tokens.get(i);
+                                    if (t.lexeme.equals(";") || t.lexeme.equals("{") || t.lexeme.equals("}")) {
+                                        break;
+                                    }
+                                    if (t.type == TokenType.LPAREN && i > 0 && tokens.get(i - 1).type == TokenType.IDENTIFIER) {
+                                        String lex = tokens.get(i - 1).lexeme;
+                                        if (!lex.equals("if") && !lex.equals("while") && !lex.equals("for") && !lex.equals("switch")) {
+                                            isFunctionCall = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (isFunctionCall) {
+                                msg = "Erro na linha " + linha + ": Vírgula ',' esperada para separar os argumentos na chamada da função.";
+                            } else if (estruturaIniciadora.equals("if")) {
+                                msg = "Erro na linha " + linha + ": Parênteses () esperados após 'if'.";
+                            } else if (estruturaIniciadora.equals("while")) {
+                                msg = "Erro na linha " + linha + ": Parênteses () esperados após 'while'.";
+                            } else if (estruturaIniciadora.equals("func")) {
+                                msg = "Erro na linha " + linha + ": Parênteses () esperados na definição dos parâmetros da função.";
+                            } else {
+                                msg = "Erro na linha " + linha + ": esperado '" + getFriendlyExpected(topo) + "', encontrado '" + tokenAtual.lexeme + "'.";
+                            }
+                        } else if (topo.equals("rbrace") && tokenAtual.type == TokenType.EOF) {
+
+                            msg = "Erro na linha " + linha + ": Fim de arquivo inesperado. Fecha chaves '}' esperado para encerrar o bloco.";
+                        } else {
+                            msg = "Erro na linha " + linha + ": esperado '" + getFriendlyExpected(topo) + "', encontrado '" + tokenAtual.lexeme + "'.";
+                        }
+                    }
+
+                    if (msg != null && !msg.isEmpty()) {
+                        System.out.println(msg);
+                        erros.add(msg);
+                    }
                     lastErrorIdx = idx;
                 }
                 pilha.remove(pilha.size() - 1);
@@ -755,8 +2019,8 @@ public class Parser {
             }
         } else {
             System.out.println("PROGRAMA SINTATICAMENTE CORRETO");
-            
-            // Gerar AST a partir da CST
+
+
             try {
                 ASTNode ast = toAST(root);
                 if (ast != null) {
@@ -773,57 +2037,57 @@ public class Parser {
         System.out.println("──────────────────────────────────────────────────\n");
     }
 
-    // -------------------------------------------------------------
-    // Tradução de CST para AST
-    // -------------------------------------------------------------
+
+
+
     private static ASTNode toAST(CSTNode node) {
         if (node == null) return null;
-        
+
         switch (node.name) {
             case "P":
                 if (node.children.isEmpty()) return null;
-                return toAST(node.children.get(0)); // LG
-                
+                return toAST(node.children.get(0));
+
             case "LG": {
                 List<ASTNode> bodyNodes = new ArrayList<>();
                 CSTNode currentLG = node;
                 while (currentLG != null && !currentLG.children.isEmpty()) {
-                    ASTNode el = toAST(currentLG.children.get(0)); // EL
+                    ASTNode el = toAST(currentLG.children.get(0));
                     if (el != null) {
                         bodyNodes.add(el);
                     }
-                    currentLG = currentLG.children.get(1); // LG
+                    currentLG = currentLG.children.get(1);
                 }
                 return new ProgramNode(bodyNodes);
             }
-                
+
             case "EL":
                 if (node.children.isEmpty()) return null;
-                return toAST(node.children.get(0)); // COM or FUNC_DEF or PROC_DEF
-                
+                return toAST(node.children.get(0));
+
             case "DECL": {
                 CSTNode first = node.children.get(0);
                 if (first.name.equals("TIPO")) {
-                    String varType = first.children.get(0).name; // int, float, string
+                    String varType = first.children.get(0).name;
                     String name = node.children.get(1).lexeme;
                     ASTNode val = null;
                     if (node.children.size() > 2 && node.children.get(2).name.equals("DECL_REST")) {
                         CSTNode declRest = node.children.get(2);
                         if (!declRest.children.isEmpty() && declRest.children.get(0).name.equals("assign")) {
-                            val = toAST(declRest.children.get(1)); // EXP
+                            val = toAST(declRest.children.get(1));
                         }
                     }
                     return new VariableDeclarationNode(varType, name, val);
                 } else {
-                    // identifier assign EXP semicolon
+
                     String name = first.lexeme;
-                    ASTNode val = toAST(node.children.get(2)); // EXP
+                    ASTNode val = toAST(node.children.get(2));
                     return new AssignmentNode(name, val);
                 }
             }
-            
+
             case "FUNC_DEF": {
-                // func FUNC_REST
+
                 CSTNode funcRest = node.children.get(1);
                 String type;
                 String name;
@@ -835,54 +2099,54 @@ public class Parser {
                     params = flattenParams(funcRest.children.get(3));
                     bodyNode = toAST(funcRest.children.get(5));
                 } else {
-                    type = "void"; // tipo de retorno omitido
+                    type = "void";
                     name = funcRest.children.get(0).lexeme;
                     params = flattenParams(funcRest.children.get(2));
                     bodyNode = toAST(funcRest.children.get(4));
                 }
                 return new FunctionDeclarationNode(type, name, params, bodyNode);
             }
-            
+
             case "PROC_DEF": {
-                // proc identifier lparen PARAMS rparen BLOCO
+
                 String name = node.children.get(1).lexeme;
                 List<ParameterNode> params = flattenParams(node.children.get(3));
                 ASTNode bodyNode = toAST(node.children.get(5));
                 return new ProcedureDeclarationNode(name, params, bodyNode);
             }
-            
+
             case "BLOCO":
-                // lbrace LISTA_COM rbrace
-                return toAST(node.children.get(1)); // LISTA_COM
-                
+
+                return toAST(node.children.get(1));
+
             case "LISTA_COM": {
                 List<ASTNode> stmts = new ArrayList<>();
                 CSTNode currentLC = node;
                 while (currentLC != null && !currentLC.children.isEmpty()) {
-                    ASTNode com = toAST(currentLC.children.get(0)); // COM
+                    ASTNode com = toAST(currentLC.children.get(0));
                     if (com != null) {
                         stmts.add(com);
                     }
-                    currentLC = currentLC.children.get(1); // LISTA_COM
+                    currentLC = currentLC.children.get(1);
                 }
                 return new BlockNode(stmts);
             }
-            
+
             case "COM": {
                 CSTNode first = node.children.get(0);
-                if (first.name.equals("DECL") || first.name.equals("IF_S") || 
-                    first.name.equals("WHILE_S") || first.name.equals("FOR_S") || 
+                if (first.name.equals("DECL") || first.name.equals("IF_S") ||
+                    first.name.equals("WHILE_S") || first.name.equals("FOR_S") ||
                     first.name.equals("SWITCH_S")) {
                     return toAST(first);
                 } else if (first.name.equals("identifier")) {
                     String name = first.lexeme;
-                    List<ASTNode> args = flattenArgs(node.children.get(2)); // ARGS
+                    List<ASTNode> args = flattenArgs(node.children.get(2));
                     return new FunctionCallNode(name, args);
                 } else if (first.name.equals("return")) {
                     CSTNode expOpc = node.children.get(1);
                     ASTNode arg = null;
                     if (!expOpc.children.isEmpty()) {
-                        arg = toAST(expOpc.children.get(0)); // EXP
+                        arg = toAST(expOpc.children.get(0));
                     }
                     return new ReturnStatementNode(arg);
                 } else if (first.name.equals("break")) {
@@ -892,28 +2156,28 @@ public class Parser {
                 }
                 return null;
             }
-            
+
             case "IF_S": {
-                // if lparen EXP rparen BLOCO ELSE_OPC
+
                 ASTNode cond = toAST(node.children.get(2));
                 ASTNode thenBranch = toAST(node.children.get(4));
                 CSTNode elseOpc = node.children.get(5);
                 ASTNode elseBranch = null;
                 if (!elseOpc.children.isEmpty()) {
-                    elseBranch = toAST(elseOpc.children.get(1)); // BLOCO do else
+                    elseBranch = toAST(elseOpc.children.get(1));
                 }
                 return new IfStatementNode(cond, thenBranch, elseBranch);
             }
-            
+
             case "WHILE_S": {
-                // while lparen EXP rparen BLOCO
+
                 ASTNode cond = toAST(node.children.get(2));
                 ASTNode whileBody = toAST(node.children.get(4));
                 return new WhileStatementNode(cond, whileBody);
             }
-            
+
             case "FOR_S": {
-                // for lparen FOR_INIT semicolon EXP semicolon ATRIB_S rparen BLOCO
+
                 ASTNode init = toAST(node.children.get(2));
                 ASTNode cond = toAST(node.children.get(4));
                 ASTNode incr = toAST(node.children.get(6));
@@ -930,40 +2194,40 @@ public class Parser {
                     ASTNode val = null;
                     CSTNode declRest = node.children.get(2);
                     if (!declRest.children.isEmpty() && declRest.children.get(0).name.equals("assign")) {
-                        val = toAST(declRest.children.get(1)); // EXP
+                        val = toAST(declRest.children.get(1));
                     }
                     return new VariableDeclarationNode(varType, name, val);
                 } else {
                     String name = first.lexeme;
-                    ASTNode val = toAST(node.children.get(2)); // EXP
+                    ASTNode val = toAST(node.children.get(2));
                     return new AssignmentNode(name, val);
                 }
             }
-            
+
             case "ATRIB_S": {
-                // identifier assign EXP
+
                 String name = node.children.get(0).lexeme;
                 ASTNode val = toAST(node.children.get(2));
                 return new AssignmentNode(name, val);
             }
-            
+
             case "SWITCH_S": {
-                // switch lparen identifier rparen lbrace LISTA_CASES DEF_OPC rbrace
+
                 String disc = node.children.get(2).lexeme;
                 List<SwitchCaseNode> cases = flattenCases(node.children.get(5));
                 CSTNode defOpc = node.children.get(6);
                 ASTNode defaultBranch = null;
                 if (!defOpc.children.isEmpty()) {
-                    defaultBranch = toAST(defOpc.children.get(2)); // LISTA_COM -> AST
+                    defaultBranch = toAST(defOpc.children.get(2));
                 }
                 return new SwitchStatementNode(disc, cases, defaultBranch);
             }
 
             case "CASE_I": {
-                // case LITERAL colon LISTA_COM
+
                 ASTNode test = toAST(node.children.get(1));
                 List<ASTNode> consequent = new ArrayList<>();
-                CSTNode currentLC = node.children.get(3); // LISTA_COM
+                CSTNode currentLC = node.children.get(3);
                 while (currentLC != null && !currentLC.children.isEmpty()) {
                     ASTNode com = toAST(currentLC.children.get(0));
                     if (com != null) {
@@ -973,59 +2237,59 @@ public class Parser {
                 }
                 return new SwitchCaseNode(test, consequent);
             }
-            
+
             case "EXP":
-                // E_AND EXP_L
+
                 return buildBinaryExpression(node.children.get(0), node.children.get(1));
-                
+
             case "E_AND":
-                // E_COMP E_AND_L
+
                 return buildBinaryExpression(node.children.get(0), node.children.get(1));
-                
+
             case "E_COMP":
-                // E_ADD E_COMP_L
+
                 return buildBinaryExpression(node.children.get(0), node.children.get(1));
-                
+
             case "E_ADD":
-                // E_MULT E_ADD_L
+
                 return buildBinaryExpression(node.children.get(0), node.children.get(1));
-                
+
             case "E_MULT":
-                // E_UN E_MULT_L
+
                 return buildBinaryExpression(node.children.get(0), node.children.get(1));
-                
+
             case "E_UN":
                 if (node.children.get(0).name.equals("not") || node.children.get(0).name.equals("minus")) {
                     String op = node.children.get(0).name;
-                    ASTNode arg = toAST(node.children.get(1)); // E_UN
+                    ASTNode arg = toAST(node.children.get(1));
                     return new UnaryExpressionNode(op, arg);
                 } else {
-                    return toAST(node.children.get(0)); // FINAL
+                    return toAST(node.children.get(0));
                 }
-                
+
             case "FINAL": {
                 CSTNode first = node.children.get(0);
                 if (first.name.equals("lparen")) {
-                    return toAST(node.children.get(1)); // EXP
+                    return toAST(node.children.get(1));
                 } else if (first.name.equals("identifier")) {
                     String name = first.lexeme;
                     CSTNode finalL = node.children.get(1);
                     if (finalL.children.isEmpty()) {
                         return new IdentifierNode(name);
                     } else {
-                        List<ASTNode> args = flattenArgs(finalL.children.get(1)); // ARGS
+                        List<ASTNode> args = flattenArgs(finalL.children.get(1));
                         return new FunctionCallNode(name, args);
                     }
                 } else {
-                    return toAST(first); // LITERAL
+                    return toAST(first);
                 }
             }
-            
+
             case "LITERAL": {
                 CSTNode lit = node.children.get(0);
                 return new LiteralNode(lit.name, lit.lexeme);
             }
-            
+
             default:
                 return null;
         }
@@ -1037,7 +2301,7 @@ public class Parser {
             return params;
         }
         params.add(toParam(paramsNode.children.get(0)));
-        CSTNode current = paramsNode.children.get(1); // PARAMS_L
+        CSTNode current = paramsNode.children.get(1);
         while (current != null && !current.children.isEmpty()) {
             params.add(toParam(current.children.get(1)));
             current = current.children.get(2);
@@ -1057,7 +2321,7 @@ public class Parser {
             return args;
         }
         args.add(toAST(argsNode.children.get(0)));
-        CSTNode current = argsNode.children.get(1); // ARGS_L
+        CSTNode current = argsNode.children.get(1);
         while (current != null && !current.children.isEmpty()) {
             args.add(toAST(current.children.get(1)));
             current = current.children.get(2);
@@ -1071,9 +2335,9 @@ public class Parser {
         while (current != null && !current.children.isEmpty()) {
             CSTNode caseI = current.children.get(0);
             ASTNode test = toAST(caseI.children.get(1));
-            
+
             List<ASTNode> consequent = new ArrayList<>();
-            CSTNode currentLC = caseI.children.get(3); // LISTA_COM
+            CSTNode currentLC = caseI.children.get(3);
             while (currentLC != null && !currentLC.children.isEmpty()) {
                 ASTNode com = toAST(currentLC.children.get(0));
                 if (com != null) {
@@ -1081,7 +2345,7 @@ public class Parser {
                 }
                 currentLC = currentLC.children.get(1);
             }
-            
+
             cases.add(new SwitchCaseNode(test, consequent));
             current = current.children.get(1);
         }

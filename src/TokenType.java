@@ -10,6 +10,7 @@ public enum TokenType {
     ASSIGN,
     LPAREN, RPAREN,
     LBRACE, RBRACE,
+    LBRACKET, RBRACKET,
     SEMICOLON, COMMA, COLON,
 
     IDENTIFIER,

@@ -57,6 +57,8 @@ public class Lexer {
         addRule("\\)", TokenType.RPAREN);
         addRule("\\{", TokenType.LBRACE);
         addRule("\\}", TokenType.RBRACE);
+        addRule("\\[", TokenType.LBRACKET);
+        addRule("\\]", TokenType.RBRACKET);
         addRule(";", TokenType.SEMICOLON);
         addRule(",", TokenType.COMMA);
         addRule(":", TokenType.COLON);
