@@ -18,6 +18,7 @@ public class Lexer {
 
     public Lexer() {
         addRule("//.*", null);
+        addRule("(?s)/\\*.*?\\*/", null);
         addRule("\\s+", null);
 
         addRule("int\\b", TokenType.INT);

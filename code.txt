@@ -3,9 +3,13 @@ int globalInt;
 float globalFloat = 1.5;
 string globalString = "CORA";
 
-// Funcao com retorno e tipo explicito
+/*
+  Comentario de bloco inicial:
+  Funcao com retorno e tipo explicito.
+  Recebe dois parametros inteiros.
+*/
 func int soma(int a, int b) {
-    return a + b;
+    return (a + b) * 2; // Expressao com parenteses para precedencia
 }
 
 // Funcao com retorno e tipo implicito
@@ -32,14 +36,14 @@ proc principal() {
     i = 0;
     media = calcularMedia(nota1, nota2);
 
-    // Condicao (if / else)
-    if (media >= 7.0 && media <= 10.0) {
+    // Condicao (if / else) com operador logico OU (||) e diferenca (!=)
+    if (media >= 7.0 || media != 0.0) {
         status = statusPadrao();
     } else {
         status = "Reprovado";
     }
 
-    // Switch case default
+    // Switch com literais inteiros
     switch (opcao) {
         case 1:
             globalInt = soma(10, 20);
@@ -52,6 +56,19 @@ proc principal() {
             break;
     }
 
+    // Switch com literais string
+    switch (status) {
+        case "Aprovado":
+            opcao = 10;
+            break;
+        case "Reprovado":
+            opcao = 20;
+            break;
+        default:
+            opcao = 0;
+            break;
+    }
+
     // Laco while
     while (!(globalInt == 0)) {
         globalInt = globalInt - 10;
@@ -60,17 +77,17 @@ proc principal() {
         }
     }
 
-    // Laco for
+    // Laco for com operador modulo (%)
     for (int k = 0; k < 5; k = k + 1) {
-        int temp = k * 2;
-        if (temp == 4) {
+        int temp = (k * 2) % 3;
+        if (temp == 0) {
             continue;
         }
     }
 
     // Laco for com inicializacao por atribuicao
     for (i = 0; i < 3; i = i + 1) {
-        // Laco vazio
+        /* Laco vazio com comentario de bloco interno */
     }
 
     // Laco for com inicializacao vazia
