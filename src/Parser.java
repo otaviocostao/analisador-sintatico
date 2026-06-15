@@ -991,7 +991,7 @@ public class Parser {
 
 
         if (topo.equals("rbrace") && (tokenAtual.type == TokenType.CASE || tokenAtual.type == TokenType.DEFAULT)) {
-            if (!pilhaContains(pilha, "SWITCH_S")) {
+            if (!pilhaContains(pilha, "SWITCH_S") && !pilhaContains(pilha, "LISTA_CASES") && !pilhaContains(pilha, "DEF_OPC")) {
                 return "Erro na linha " + linha + ": Instrução 'case' inválida fora de um escopo de 'switch' correspondente.";
             }
         }
@@ -1668,7 +1668,7 @@ public class Parser {
 
                 if ((topo.equals("LG") || topo.equals("LISTA_COM")) &&
                     (tipo.equals("case") || tipo.equals("default")) &&
-                    !pilhaContains(pilha, "SWITCH_S") &&
+                    !pilhaContains(pilha, "SWITCH_S") && !pilhaContains(pilha, "LISTA_CASES") && !pilhaContains(pilha, "DEF_OPC") &&
                     !(tipo.equals("default") && hasDuplicateDefaultBefore(tokens, idx))) {
 
                     String msg = "Erro na linha " + linha + ": Instrução 'case' inválida fora de um escopo de 'switch' correspondente.";

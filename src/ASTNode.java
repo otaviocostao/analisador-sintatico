@@ -289,7 +289,7 @@ class ForStatementNode extends ASTNode {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
         sb.append(subInd).append("\"type\": \"ForStatement\",\n");
-        sb.append(subInd).append("\"init\": ").append(init.toJson(indent + 1)).append(",\n");
+        sb.append(subInd).append("\"init\": ").append(init == null ? "null" : init.toJson(indent + 1)).append(",\n");
         sb.append(subInd).append("\"condition\": ").append(condition.toJson(indent + 1)).append(",\n");
         sb.append(subInd).append("\"increment\": ").append(increment.toJson(indent + 1)).append(",\n");
         sb.append(subInd).append("\"body\": ").append(body.toJson(indent + 1)).append("\n");

@@ -2,6 +2,135 @@
   "type": "Program",
   "body": [
 {
+      "type": "VariableDeclaration",
+      "varType": "int",
+      "name": "globalInt",
+      "value": null
+    },
+{
+      "type": "VariableDeclaration",
+      "varType": "float",
+      "name": "globalFloat",
+      "value": {
+        "type": "Literal",
+        "valueType": "float_literal",
+        "value": "1.5"
+      }
+    },
+{
+      "type": "VariableDeclaration",
+      "varType": "string",
+      "name": "globalString",
+      "value": {
+        "type": "Literal",
+        "valueType": "string_literal",
+        "value": "\"CORA\""
+      }
+    },
+{
+      "type": "FunctionDeclaration",
+      "returnType": "int",
+      "name": "soma",
+      "params": [
+{
+          "type": "Parameter",
+          "paramType": "int",
+          "name": "a"
+        },
+{
+          "type": "Parameter",
+          "paramType": "int",
+          "name": "b"
+        }
+      ],
+      "body": {
+        "type": "Block",
+        "statements": [
+{
+            "type": "ReturnStatement",
+            "argument": {
+              "type": "BinaryExpression",
+              "operator": "plus",
+              "left": {
+                "type": "Identifier",
+                "name": "a"
+              },
+              "right": {
+                "type": "Identifier",
+                "name": "b"
+              }
+            }
+          }
+        ]
+      }
+    },
+{
+      "type": "FunctionDeclaration",
+      "returnType": "void",
+      "name": "calcularMedia",
+      "params": [
+{
+          "type": "Parameter",
+          "paramType": "float",
+          "name": "n1"
+        },
+{
+          "type": "Parameter",
+          "paramType": "float",
+          "name": "n2"
+        }
+      ],
+      "body": {
+        "type": "Block",
+        "statements": [
+{
+            "type": "ReturnStatement",
+            "argument": {
+              "type": "BinaryExpression",
+              "operator": "divide",
+              "left": {
+                "type": "BinaryExpression",
+                "operator": "plus",
+                "left": {
+                  "type": "Identifier",
+                  "name": "n1"
+                },
+                "right": {
+                  "type": "Identifier",
+                  "name": "n2"
+                }
+              },
+              "right": {
+                "type": "Literal",
+                "valueType": "float_literal",
+                "value": "2.0"
+              }
+            }
+          }
+        ]
+      }
+    },
+{
+      "type": "FunctionDeclaration",
+      "returnType": "string",
+      "name": "statusPadrao",
+      "params": [
+      ],
+      "body": {
+        "type": "Block",
+        "statements": [
+{
+            "type": "ReturnStatement",
+            "argument": {
+              "type": "Literal",
+              "valueType": "string_literal",
+              "value": "\"Aprovado\""
+            }
+          }
+        ]
+      }
+    },
+{
       "type": "ProcedureDeclaration",
       "name": "principal",
       "params": [
@@ -12,62 +141,488 @@
 {
             "type": "VariableDeclaration",
             "varType": "int",
-            "name": "x",
+            "name": "opcao",
             "value": {
               "type": "Literal",
               "valueType": "int_literal",
-              "value": "5"
+              "value": "1"
+            }
+          },
+{
+            "type": "VariableDeclaration",
+            "varType": "int",
+            "name": "i",
+            "value": null
+          },
+{
+            "type": "VariableDeclaration",
+            "varType": "float",
+            "name": "media",
+            "value": null
+          },
+{
+            "type": "VariableDeclaration",
+            "varType": "float",
+            "name": "nota1",
+            "value": {
+              "type": "Literal",
+              "valueType": "float_literal",
+              "value": "7.5"
+            }
+          },
+{
+            "type": "VariableDeclaration",
+            "varType": "float",
+            "name": "nota2",
+            "value": {
+              "type": "Literal",
+              "valueType": "float_literal",
+              "value": "8.5"
+            }
+          },
+{
+            "type": "VariableDeclaration",
+            "varType": "string",
+            "name": "status",
+            "value": null
+          },
+{
+            "type": "Assignment",
+            "name": "i",
+            "value": {
+              "type": "Literal",
+              "valueType": "int_literal",
+              "value": "0"
             }
           },
 {
             "type": "Assignment",
-            "name": "x",
+            "name": "media",
             "value": {
+              "type": "FunctionCall",
+              "name": "calcularMedia",
+              "arguments": [
+{
+                  "type": "Identifier",
+                  "name": "nota1"
+                },
+{
+                  "type": "Identifier",
+                  "name": "nota2"
+                }
+              ]
+            }
+          },
+{
+            "type": "IfStatement",
+            "condition": {
               "type": "BinaryExpression",
-              "operator": "plus",
+              "operator": "and",
+              "left": {
+                "type": "BinaryExpression",
+                "operator": "greater_equal",
+                "left": {
+                  "type": "Identifier",
+                  "name": "media"
+                },
+                "right": {
+                  "type": "Literal",
+                  "valueType": "float_literal",
+                  "value": "7.0"
+                }
+              },
+              "right": {
+                "type": "BinaryExpression",
+                "operator": "less_equal",
+                "left": {
+                  "type": "Identifier",
+                  "name": "media"
+                },
+                "right": {
+                  "type": "Literal",
+                  "valueType": "float_literal",
+                  "value": "10.0"
+                }
+              }
+            },
+            "thenBranch": {
+              "type": "Block",
+              "statements": [
+{
+                  "type": "Assignment",
+                  "name": "status",
+                  "value": {
+                    "type": "FunctionCall",
+                    "name": "statusPadrao",
+                    "arguments": [
+                    ]
+                  }
+                }
+              ]
+            },
+            "elseBranch": {
+              "type": "Block",
+              "statements": [
+{
+                  "type": "Assignment",
+                  "name": "status",
+                  "value": {
+                    "type": "Literal",
+                    "valueType": "string_literal",
+                    "value": "\"Reprovado\""
+                  }
+                }
+              ]
+            }
+          },
+{
+            "type": "SwitchStatement",
+            "discriminant": "opcao",
+            "cases": [
+{
+                "type": "SwitchCase",
+                "test": {
+                  "type": "Literal",
+                  "valueType": "int_literal",
+                  "value": "1"
+                },
+                "consequent": [
+{
+                    "type": "Assignment",
+                    "name": "globalInt",
+                    "value": {
+                      "type": "FunctionCall",
+                      "name": "soma",
+                      "arguments": [
+{
+                          "type": "Literal",
+                          "valueType": "int_literal",
+                          "value": "10"
+                        },
+{
+                          "type": "Literal",
+                          "valueType": "int_literal",
+                          "value": "20"
+                        }
+                      ]
+                    }
+                  },
+{
+                    "type": "BreakStatement"
+                  }
+                ]
+              },
+{
+                "type": "SwitchCase",
+                "test": {
+                  "type": "Literal",
+                  "valueType": "int_literal",
+                  "value": "2"
+                },
+                "consequent": [
+{
+                    "type": "Assignment",
+                    "name": "globalInt",
+                    "value": {
+                      "type": "FunctionCall",
+                      "name": "soma",
+                      "arguments": [
+{
+                          "type": "Literal",
+                          "valueType": "int_literal",
+                          "value": "30"
+                        },
+{
+                          "type": "Literal",
+                          "valueType": "int_literal",
+                          "value": "40"
+                        }
+                      ]
+                    }
+                  },
+{
+                    "type": "BreakStatement"
+                  }
+                ]
+              }
+            ],
+            "defaultBranch": {
+              "type": "Block",
+              "statements": [
+{
+                  "type": "Assignment",
+                  "name": "globalInt",
+                  "value": {
+                    "type": "Literal",
+                    "valueType": "int_literal",
+                    "value": "0"
+                  }
+                },
+{
+                  "type": "BreakStatement"
+                }
+              ]
+            }
+          },
+{
+            "type": "WhileStatement",
+            "condition": {
+              "type": "UnaryExpression",
+              "operator": "not",
+              "argument": {
+                "type": "BinaryExpression",
+                "operator": "equal_equal",
+                "left": {
+                  "type": "Identifier",
+                  "name": "globalInt"
+                },
+                "right": {
+                  "type": "Literal",
+                  "valueType": "int_literal",
+                  "value": "0"
+                }
+              }
+            },
+            "body": {
+              "type": "Block",
+              "statements": [
+{
+                  "type": "Assignment",
+                  "name": "globalInt",
+                  "value": {
+                    "type": "BinaryExpression",
+                    "operator": "minus",
+                    "left": {
+                      "type": "Identifier",
+                      "name": "globalInt"
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "valueType": "int_literal",
+                      "value": "10"
+                    }
+                  }
+                },
+{
+                  "type": "IfStatement",
+                  "condition": {
+                    "type": "BinaryExpression",
+                    "operator": "less",
+                    "left": {
+                      "type": "Identifier",
+                      "name": "globalInt"
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "valueType": "int_literal",
+                      "value": "10"
+                    }
+                  },
+                  "thenBranch": {
+                    "type": "Block",
+                    "statements": [
+{
+                        "type": "BreakStatement"
+                      }
+                    ]
+                  },
+                  "elseBranch": null
+                }
+              ]
+            }
+          },
+{
+            "type": "ForStatement",
+            "init": {
+              "type": "VariableDeclaration",
+              "varType": "int",
+              "name": "k",
+              "value": {
+                "type": "Literal",
+                "valueType": "int_literal",
+                "value": "0"
+              }
+            },
+            "condition": {
+              "type": "BinaryExpression",
+              "operator": "less",
               "left": {
                 "type": "Identifier",
-                "name": "x"
+                "name": "k"
               },
               "right": {
                 "type": "Literal",
                 "valueType": "int_literal",
-                "value": "1"
+                "value": "5"
               }
+            },
+            "increment": {
+              "type": "Assignment",
+              "name": "k",
+              "value": {
+                "type": "BinaryExpression",
+                "operator": "plus",
+                "left": {
+                  "type": "Identifier",
+                  "name": "k"
+                },
+                "right": {
+                  "type": "Literal",
+                  "valueType": "int_literal",
+                  "value": "1"
+                }
+              }
+            },
+            "body": {
+              "type": "Block",
+              "statements": [
+{
+                  "type": "VariableDeclaration",
+                  "varType": "int",
+                  "name": "temp",
+                  "value": {
+                    "type": "BinaryExpression",
+                    "operator": "multiply",
+                    "left": {
+                      "type": "Identifier",
+                      "name": "k"
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "valueType": "int_literal",
+                      "value": "2"
+                    }
+                  }
+                },
+{
+                  "type": "IfStatement",
+                  "condition": {
+                    "type": "BinaryExpression",
+                    "operator": "equal_equal",
+                    "left": {
+                      "type": "Identifier",
+                      "name": "temp"
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "valueType": "int_literal",
+                      "value": "4"
+                    }
+                  },
+                  "thenBranch": {
+                    "type": "Block",
+                    "statements": [
+{
+                        "type": "ContinueStatement"
+                      }
+                    ]
+                  },
+                  "elseBranch": null
+                }
+              ]
             }
-          }
-        ]
-      }
-    },
+          },
 {
-      "type": "FunctionDeclaration",
-      "returnType": "int",
-      "name": "dobro",
-      "params": [
-{
-          "type": "Parameter",
-          "paramType": "int",
-          "name": "n"
-        }
-      ],
-      "body": {
-        "type": "Block",
-        "statements": [
-{
-            "type": "ReturnStatement",
-            "argument": {
+            "type": "ForStatement",
+            "init": {
+              "type": "Assignment",
+              "name": "i",
+              "value": {
+                "type": "Literal",
+                "valueType": "int_literal",
+                "value": "0"
+              }
+            },
+            "condition": {
               "type": "BinaryExpression",
-              "operator": "multiply",
+              "operator": "less",
               "left": {
                 "type": "Identifier",
-                "name": "n"
+                "name": "i"
               },
               "right": {
+                "type": "Literal",
+                "valueType": "int_literal",
+                "value": "3"
+              }
+            },
+            "increment": {
+              "type": "Assignment",
+              "name": "i",
+              "value": {
+                "type": "BinaryExpression",
+                "operator": "plus",
+                "left": {
+                  "type": "Identifier",
+                  "name": "i"
+                },
+                "right": {
+                  "type": "Literal",
+                  "valueType": "int_literal",
+                  "value": "1"
+                }
+              }
+            },
+            "body": {
+              "type": "Block",
+              "statements": [
+              ]
+            }
+          },
+{
+            "type": "ForStatement",
+            "init": null,
+            "condition": {
+              "type": "BinaryExpression",
+              "operator": "greater",
+              "left": {
+                "type": "Identifier",
+                "name": "i"
+              },
+              "right": {
+                "type": "Literal",
+                "valueType": "int_literal",
+                "value": "0"
+              }
+            },
+            "increment": {
+              "type": "Assignment",
+              "name": "i",
+              "value": {
+                "type": "BinaryExpression",
+                "operator": "minus",
+                "left": {
+                  "type": "Identifier",
+                  "name": "i"
+                },
+                "right": {
+                  "type": "Literal",
+                  "valueType": "int_literal",
+                  "value": "1"
+                }
+              }
+            },
+            "body": {
+              "type": "Block",
+              "statements": [
+              ]
+            }
+          },
+{
+            "type": "FunctionCall",
+            "name": "soma",
+            "arguments": [
+{
+                "type": "Literal",
+                "valueType": "int_literal",
+                "value": "1"
+              },
+{
                 "type": "Literal",
                 "valueType": "int_literal",
                 "value": "2"
               }
-            }
+            ]
           }
         ]
       }
