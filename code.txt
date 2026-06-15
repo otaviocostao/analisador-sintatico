@@ -1,8 +1,83 @@
-proc principal() {
-    int x = 5;
-    x = x + 1;
+// Declaracoes globais
+int globalInt;
+float globalFloat = 1.5;
+string globalString = "CORA";
+
+// Funcao com retorno e tipo explicito
+func int soma(int a, int b) {
+    return a + b;
 }
 
-func int dobro(int n) {
-    return n * 2;
+// Funcao com retorno e tipo implicito
+func calcularMedia(float n1, float n2) {
+    return (n1 + n2) / 2.0;
+}
+
+// Funcao sem parametros
+func string statusPadrao() {
+    return "Aprovado";
+}
+
+// Procedimento
+proc principal() {
+    // Declaracoes locais (devem vir no inicio do escopo)
+    int opcao = 1;
+    int i;
+    float media;
+    float nota1 = 7.5;
+    float nota2 = 8.5;
+    string status;
+
+    // Comandos executaveis
+    i = 0;
+    media = calcularMedia(nota1, nota2);
+
+    // Condicao (if / else)
+    if (media >= 7.0 && media <= 10.0) {
+        status = statusPadrao();
+    } else {
+        status = "Reprovado";
+    }
+
+    // Switch case default
+    switch (opcao) {
+        case 1:
+            globalInt = soma(10, 20);
+            break;
+        case 2:
+            globalInt = soma(30, 40);
+            break;
+        default:
+            globalInt = 0;
+            break;
+    }
+
+    // Laco while
+    while (!(globalInt == 0)) {
+        globalInt = globalInt - 10;
+        if (globalInt < 10) {
+            break;
+        }
+    }
+
+    // Laco for
+    for (int k = 0; k < 5; k = k + 1) {
+        int temp = k * 2;
+        if (temp == 4) {
+            continue;
+        }
+    }
+
+    // Laco for com inicializacao por atribuicao
+    for (i = 0; i < 3; i = i + 1) {
+        // Laco vazio
+    }
+
+    // Laco for com inicializacao vazia
+    for ( ; i > 0; i = i - 1) {
+        // Laco vazio
+    }
+
+    // Chamada de funcao/procedimento como comando
+    soma(1, 2);
 }
